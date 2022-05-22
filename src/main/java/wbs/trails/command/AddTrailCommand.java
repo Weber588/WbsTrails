@@ -1,0 +1,51 @@
+package wbs.trails.command;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import wbs.trails.WbsTrails;
+import wbs.trails.trails.Trail;
+
+import java.util.Collection;
+import java.util.List;
+
+public class AddTrailCommand extends TrailsSubcommand {
+    public AddTrailCommand(@NotNull WbsTrails plugin) {
+        super(plugin, "add");
+    }
+
+    @Override
+    protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof Player)) {
+            sendMessage("This command is only usable by players.", sender);
+            return true;
+        }
+        Player player = (Player) sender;
+
+        if (!controller.canHaveMore(player)) {
+            sendMessage("&wYou cannot have any more trails. Use &h/trails clear&w or &h/trails remove&w to change trails!", player);
+            return true;
+        }
+
+        Trail<?> trail = buildTrail(player, args);
+        if (trail == null) {
+            return true;
+        }
+
+        if (!controller.addTrail(player, trail)) {
+            sendMessage("You cannot add trails while your other trails are disabled.", player);
+            return true;
+        }
+        trail.enable();
+
+        Collection<Trail<?>> trails = controller.getTrails(player);
+        sendMessage("Trail added. You have &h" + trails.size() + "&r trails active.", player);
+
+        return true;
+    }
+
+    @Override
+    protected List<String> getTabCompletions(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+        return getTrailTabCompletions(sender, label, args);
+    }
+}

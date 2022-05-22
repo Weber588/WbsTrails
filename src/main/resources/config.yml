@@ -1,0 +1,161 @@
+# This will appear before many messages from the plugin.
+message-prefix: '&8[&7Trails&8]'
+
+# Use a minecraft colour code here to pick the message colour
+message-colour: '3'
+
+# The highlight colour (to complement the above colour)
+highlight-colour: 'b'
+
+# Errors will be this colour.
+error-colour: 'c'
+
+# Error highlights
+error-highlight: '7'
+
+# How often the particles are rendered in ticks.
+refresh-rate: 3
+
+# The maximum checks for a multiple permission are done.
+# If you give a player wbstrails.multiple.11 and this is 10, it will fail.
+# Higher values check more permission nodes - Only have this as high as you need it.
+max-multiple: 10
+
+# Trails can be annoying with combat, so you can configure whether they'll toggle
+# for a set amount of time when the player takes damage!
+toggle-on-damage:
+  toggle-from-players: false # When true, this will toggle trails for both the attacker and the attacked.
+  toggle-from-mobs: false
+  # This is ALL damage, not just mobs and players. It includes fall damage, drowning, starvation etc.
+  toggle-from-all: false 
+  # The amount of seconds a player must avoid damage to be allowed to re-enable their trail/s.
+  # Set to -1 to allow them to re-enable it without cooldown from damage.
+  disable-duration: 30 
+
+# Here you can blacklist particles, even for operators and those with the
+# wbstrails.particles.all permission.
+# Useful for disabling damaging/laggy particles.
+particle-blacklist:
+  - barrier
+  - mob_appearance
+  - explosion_huge
+  - explosion_large
+  - explosion_normal
+  - cloud
+  - campfire_signal_smoke
+  - flash
+
+# Here you can create permissions to decide who can use what particles.
+# If a user has "wbstrails.particles.all" they'll have all particles except those
+# in the blacklist. Otherwise, they'll only have particles from the perm-groups they have.
+# If you set one of these permissions to false, they won't have the contained particles
+# even if they have wbstrails.particles.all or another group that contains
+particle-sets:
+  nether: # The permission for this set would be "wbstrails.particles.nether".
+    - ash
+    - crimson_spore
+    - flame
+    - lava
+    - smoke_normal
+    - smoke_large
+  ocean: # "wbstrails.particles.ocean". You can make as many sets as you like!
+    - bubble_column_up
+    - bubble_pop
+    - current_down
+    - dolphin
+    - nautilus
+    - suspended
+    - suspended_depth
+    - water_bubble
+    - water_drop
+    - water_splash
+    - water_wake
+  redstone: # Groups can contain a single particle if you want to keep some exclusive!
+    - redstone
+
+
+trails-options:
+  AURA:
+    description: Simply a slow spawning trail of particles that surround you
+    amount:
+      default: 3
+      min: 1
+      max: 5
+  CLOUD:
+    description: A wide disc of particles that goes around your feet
+    radius:
+      default: 1
+      min: 0.4
+      max: 1.2
+  CUBE:
+    description: Particles spawn in the outline of a cube around you
+    amount:
+      default: 5
+      min: 1
+      max: 10
+    size:
+      default: 1
+      min: 0.4
+      max: 2
+    speed:
+      default: 1
+      min: 0
+      max: 2
+    bounce:
+      default: true
+  ELECTRIC:
+    description: Tiny arcs appear around you as if you were sparking.
+  HALO:
+    description: A ring of particles that hover above your head
+  HELIX:
+    description: Two orbs circle you while moving up and down, creating a spiral around your body
+    amount:
+      default: 3
+      min: 1
+      max: 5
+    radius:
+      default: 0.8
+      min: 0.4
+      max: 1.2
+    speed:
+      default: 4
+      min: 1
+      max: 15
+  HORNS:
+    description: Particle horns
+  ORBITER:
+    description: A group of particles that circles around you
+    amount:
+      default: 2
+      min: 1
+      max: 5
+    height:
+      default: 1
+      min: 0
+      max: 2
+    radius:
+      default: 1
+      min: 0.4
+      max: 1.2
+    speed:
+      default: 6
+      min: 1
+      max: 15
+    bounce:
+      default: true
+  STANDARD:
+    description: A small sphere of particles that follows you as you move
+    amount:
+      default: 5
+      min: 1
+      max: 5
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  

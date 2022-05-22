@@ -1,0 +1,27 @@
+main: wbs.trails.WbsTrails
+name: WbsTrails
+version: 0.1.0
+api-version: 1.13
+author: Weber588
+depend: [WbsUtils]
+description: A simple trails plugin
+
+commands:
+  trails:
+    aliases: [trail]
+    description: Manipulate trails.
+    permission: wbstrails.command
+    
+permissions:
+  wbstrails.command:
+    description: Usage of the trail command
+  wbstrails.admin.clearother:
+    description: The ability to /trail clear [player]
+  wbstrails.admin.reload:
+    description: Reload the configs and view associated errors with that.
+  wbstrails.rainbow:
+    description: The ability to use 'rainbow' instead of specifying RGB values with the redstone particle.
+  wbstrails.type:
+    description: Subnodes of this permission give access to specific trail types (aura, halo, standard etc)
+  wbstrails.multiple:
+    description: The ability to have multiple trails active at a time, specified by the subnode (wbstrails.multiple.3 for example)
