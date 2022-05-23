@@ -46,8 +46,8 @@ public class RemoveSubcommand extends TrailsSubcommand {
         }
 
         int checkIndex = 1;
-        Trail toRemove = null;
-        for (Trail activeTrail : trails) {
+        Trail<?> toRemove = null;
+        for (Trail<?> activeTrail : trails) {
             if (checkIndex == removeIndex) {
                 toRemove = activeTrail;
                 break;

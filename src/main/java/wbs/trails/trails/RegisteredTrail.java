@@ -4,7 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.trails.trails.options.ConfigOption;
-import wbs.trails.trails.options.TrailOption;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

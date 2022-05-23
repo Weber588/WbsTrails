@@ -1,15 +1,12 @@
 package wbs.trails.trails.presets;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.Nullable;
 import wbs.trails.WbsTrails;
 import wbs.trails.trails.RegisteredTrail;
 import wbs.trails.trails.TrailManager;
 import wbs.utils.exceptions.InvalidConfigurationException;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public final class PresetManager {

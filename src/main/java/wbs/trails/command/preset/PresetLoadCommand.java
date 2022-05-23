@@ -4,8 +4,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.trails.TrailsController;
-import wbs.trails.TrailsSettings;
-import wbs.trails.WbsTrails;
 import wbs.trails.trails.Trail;
 import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;

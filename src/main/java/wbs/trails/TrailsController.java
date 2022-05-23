@@ -22,7 +22,7 @@ public class TrailsController {
 		return instance;
 	}
 
-	private WbsTrails plugin = null;
+	private WbsTrails plugin;
 	private final TrailsSettings settings;
 	
 	private TrailsController() {

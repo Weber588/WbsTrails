@@ -6,8 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import wbs.trails.WbsTrails;
 import wbs.trails.menus.PlayerSpecificMenu;
 import wbs.utils.util.commands.WbsSubcommand;
-import wbs.utils.util.menus.WbsMenu;
-import wbs.utils.util.plugin.WbsPlugin;
 
 public abstract class MenuSubcommand extends WbsSubcommand {
     public MenuSubcommand(@NotNull WbsTrails plugin, @NotNull String label) {

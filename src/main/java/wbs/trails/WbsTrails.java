@@ -7,7 +7,6 @@ import org.bukkit.plugin.PluginManager;
 import wbs.trails.command.TrailsCommand;
 import wbs.trails.trails.Trail;
 import wbs.trails.trails.TrailManager;
-import wbs.trails.trails.presets.PresetManager;
 import wbs.utils.util.plugin.WbsPlugin;
 
 public class WbsTrails extends WbsPlugin {

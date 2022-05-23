@@ -14,7 +14,6 @@ import wbs.trails.trails.presets.PresetManager;
 import wbs.utils.util.WbsEnums;
 import wbs.utils.util.plugin.WbsPlugin;
 import wbs.utils.util.plugin.WbsSettings;
-import wbs.utils.util.string.WbsStrings;
 
 public class TrailsSettings extends WbsSettings {
 

@@ -103,8 +103,4 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 	public DataProducer<?, ?> getData() {
 		return data;
 	}
-
-	public void addDataOption(OptionPair<T, ?> pair) {
-
-	}
 }

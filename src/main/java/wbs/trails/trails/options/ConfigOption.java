@@ -55,7 +55,7 @@ public abstract class ConfigOption<T, V> {
 
     public final OptionPair<T, V> fromT(T from) {
         V value = getter.apply(from);
-        return new OptionPair<T, V>(this, value);
+        return new OptionPair<>(this, value);
     }
 
     public final OptionPair<T, V> pairFromValue(String valueString) {
@@ -63,7 +63,7 @@ public abstract class ConfigOption<T, V> {
 
         if (value != null) {
             if (isValid(value)) {
-                return new OptionPair<T, V>(this, value);
+                return new OptionPair<>(this, value);
             }
         }
 
@@ -74,7 +74,7 @@ public abstract class ConfigOption<T, V> {
 
     public final OptionPair<T, V> fromConfig(ConfigurationSection section) {
         V value = valueFromConfig(section);
-        return new OptionPair<T, V>(this, value);
+        return new OptionPair<>(this, value);
     }
 
     protected abstract V valueFromConfig(ConfigurationSection section);

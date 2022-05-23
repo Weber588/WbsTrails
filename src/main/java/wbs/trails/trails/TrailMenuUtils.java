@@ -8,7 +8,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import wbs.trails.WbsTrails;
 import wbs.trails.menus.MainMenu;
 import wbs.trails.menus.build.BuildMenu;
-import wbs.trails.menus.build.ChooseParticleMenu;
 import wbs.utils.util.menus.MenuSlot;
 
 import java.util.Objects;

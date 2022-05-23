@@ -26,7 +26,7 @@ public class HelixTrail extends Trail<HelixTrail> {
 				new DoubleOption<>("speed", DEFAULT_SPEED, 0.1, 10, HelixTrail::setSpeed, HelixTrail::getSpeed)
 		);
 		registration.registerOption(
-				new DoubleOption<>("rotations", DEFAULT_ROTATIONS, 0.1, 5, HelixTrail::setRotations, HelixTrail::getSpeed)
+				new DoubleOption<>("rotations", DEFAULT_ROTATIONS, 0.1, 5, HelixTrail::setRotations, HelixTrail::getRotations)
 		);
 	}
 
