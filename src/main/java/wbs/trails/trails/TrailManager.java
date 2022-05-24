@@ -4,11 +4,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import wbs.trails.WbsTrails;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 public final class TrailManager {
     private TrailManager() {}
@@ -53,5 +51,12 @@ public final class TrailManager {
 
     public static Collection<RegisteredTrail<?>> getTrails() {
         return new LinkedList<>(registeredTrails.values());
+    }
+
+    public static Collection<RegisteredTrail<?>> getAllowed(Player player) {
+        return getTrails().stream()
+                .filter(registration -> player.hasPermission(registration.getPermission()))
+                .sorted(Comparator.comparing(RegisteredTrail::getName))
+                .collect(Collectors.toList());
     }
 }

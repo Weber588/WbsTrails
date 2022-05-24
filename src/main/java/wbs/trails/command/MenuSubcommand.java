@@ -6,13 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import wbs.trails.WbsTrails;
 import wbs.trails.menus.PlayerSpecificMenu;
 import wbs.utils.util.commands.WbsSubcommand;
+import wbs.utils.util.menus.WbsMenu;
 
 public abstract class MenuSubcommand extends WbsSubcommand {
     public MenuSubcommand(@NotNull WbsTrails plugin, @NotNull String label) {
         super(plugin, label);
     }
 
-    private static final boolean WORK_IN_PROGRESS = true;
+    private static final boolean WORK_IN_PROGRESS = false;
 
     @Override
     protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
@@ -31,5 +32,5 @@ public abstract class MenuSubcommand extends WbsSubcommand {
         return true;
     }
 
-    protected abstract PlayerSpecificMenu getMenu(Player player);
+    protected abstract WbsMenu getMenu(Player player);
 }

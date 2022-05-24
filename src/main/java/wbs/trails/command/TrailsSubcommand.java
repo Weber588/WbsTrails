@@ -64,7 +64,7 @@ public class TrailsSubcommand extends WbsSubcommand {
             return null;
         }
 
-        if (!player.hasPermission("wbstrails.type." + registration.getName().toLowerCase())) {
+        if (!player.hasPermission(registration.getPermission())) {
             sendMessage("You do not have access to that trail type.", player);
             return null;
         }

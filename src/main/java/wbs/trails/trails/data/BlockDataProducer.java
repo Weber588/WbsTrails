@@ -22,9 +22,7 @@ public class BlockDataProducer extends DataProducer<BlockData, BlockDataProducer
         return created;
     }
 
-    // TODO: Allow multiple materials to be listed?
-    //  Build intermediate object
-    private Material material;
+    private Material material = Material.SAND;
 
     @Override
     public int configure(String[] args) throws IllegalArgumentException {

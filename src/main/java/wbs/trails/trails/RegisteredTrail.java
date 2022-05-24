@@ -23,6 +23,8 @@ public class RegisteredTrail<T extends Trail<T>> {
     @NotNull
     private final BiFunction<RegisteredTrail<T>, Player, T> producer;
 
+    private String description;
+
     private final Map<String, ConfigOption<T, ?>> options = new HashMap<>();
 
     public RegisteredTrail(@NotNull String name, @NotNull Class<T> trailClass, @NotNull BiFunction<RegisteredTrail<T>, Player, T> producer) throws InvalidTrailClassException {
@@ -64,6 +66,10 @@ public class RegisteredTrail<T extends Trail<T>> {
         return options.keySet();
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @NotNull
     public String getName() {
         return name;
@@ -76,9 +82,15 @@ public class RegisteredTrail<T extends Trail<T>> {
                 option.configure(optionSection);
             }
         }
+
+        description = section.getString("description");
     }
 
     public Collection<ConfigOption<T, ?>> getOptions() {
         return new LinkedList<>(options.values());
+    }
+
+    public String getPermission() {
+        return "wbstrails.type." + getName().toLowerCase();
     }
 }

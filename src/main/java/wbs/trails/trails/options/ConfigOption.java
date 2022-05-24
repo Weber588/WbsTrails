@@ -78,4 +78,9 @@ public abstract class ConfigOption<T, V> {
     }
 
     protected abstract V valueFromConfig(ConfigurationSection section);
+
+    @NotNull
+    public V getDefaultValue() {
+        return defaultValue;
+    }
 }

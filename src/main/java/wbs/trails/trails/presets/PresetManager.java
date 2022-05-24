@@ -1,6 +1,7 @@
 package wbs.trails.trails.presets;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import wbs.trails.WbsTrails;
 import wbs.trails.trails.RegisteredTrail;
@@ -8,6 +9,7 @@ import wbs.trails.trails.TrailManager;
 import wbs.utils.exceptions.InvalidConfigurationException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class PresetManager {
     private PresetManager() {}
@@ -76,5 +78,12 @@ public final class PresetManager {
 
     public static List<PresetTrail<?>> getPresets() {
         return new LinkedList<>(presets.values());
+    }
+
+    public static Collection<PresetTrail<?>> getAllowed(Player player) {
+        return getPresets().stream()
+                .filter(preset -> player.hasPermission(preset.getPermission()))
+                .sorted(Comparator.comparing(PresetTrail::getName))
+                .collect(Collectors.toList());
     }
 }

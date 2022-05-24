@@ -22,7 +22,7 @@ public class ItemStackProducer extends DataProducer<ItemStack, ItemStackProducer
         return created;
     }
 
-    private Material material;
+    private Material material = Material.SAND;
 
     @Override
     public int configure(String[] args) {

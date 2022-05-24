@@ -21,4 +21,12 @@ public abstract class NumericOption<T, V extends Number> extends ConfigOption<T,
     public @NotNull List<V> getAutoCompletions() {
         return Arrays.asList(defaultValue, min, max);
     }
+
+    public V getMin() {
+        return min;
+    }
+
+    public V getMax() {
+        return max;
+    }
 }

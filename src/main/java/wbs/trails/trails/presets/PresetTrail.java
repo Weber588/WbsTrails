@@ -20,7 +20,6 @@ public class PresetTrail<T extends Trail<T>> {
     @NotNull
     private final RegisteredTrail<T> registration;
     private final List<OptionPair<T, ?>> filledOptions = new LinkedList<>();
-    private final List<OptionPair<DataProducer<?, ?>, ?>> dataOptions = new LinkedList<>();
 
     @NotNull
     private final String id;
@@ -28,6 +27,8 @@ public class PresetTrail<T extends Trail<T>> {
     private String permission = null;
     @NotNull
     private String name;
+
+    private String description;
 
     @NotNull
     private final Particle particle;
@@ -68,6 +69,8 @@ public class PresetTrail<T extends Trail<T>> {
             }
         }
 
+        description = section.getString("description");
+
         for (ConfigOption<T, ?> option : registration.getOptions()) {
             filledOptions.add(option.fromConfig(section));
         }
@@ -102,6 +105,7 @@ public class PresetTrail<T extends Trail<T>> {
         section.set("type", registration.getName());
         section.set("particle", particle.name());
         section.set("permission", "wbstrails.preset." + id);
+        section.set("description", description);
 
         if (data != null) {
             section.set("data-type", data.getDataClass().getCanonicalName());
@@ -120,6 +124,14 @@ public class PresetTrail<T extends Trail<T>> {
 
     public void setPermission(String permission) {
         this.permission = permission;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @NotNull

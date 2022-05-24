@@ -1,8 +1,12 @@
 package wbs.trails.command;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import wbs.trails.WbsTrails;
 import wbs.trails.command.preset.PresetCommandNode;
+import wbs.trails.menus.TrailMenuUtils;
 import wbs.utils.util.commands.WbsCommand;
 
 public class TrailsCommand extends WbsCommand {
@@ -28,5 +32,19 @@ public class TrailsCommand extends WbsCommand {
         addSubcommand(new ErrorsSubcommand(plugin), permission + ".admin.reload");
         addSubcommand(new ReloadSubcommand(plugin), permission + ".admin.reload");
 
+    }
+
+    @Override
+    public boolean onCommandNoArgs(@NotNull CommandSender sender, String label) {
+        if (!(sender instanceof Player)) {
+            return super.onCommandNoArgs(sender, label);
+        }
+
+        // TODO: Make this it configurable to do menus by default
+
+        Player player = (Player) sender;
+
+        TrailMenuUtils.getMainMenu().showTo(player);
+        return true;
     }
 }

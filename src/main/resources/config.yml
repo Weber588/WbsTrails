@@ -122,7 +122,7 @@ trails-options:
       min: 1
       max: 15
   HORNS:
-    description: Particle horns
+    description: Particle horns!
   ORBITER:
     description: A group of particles that circles around you
     amount:

@@ -1,4 +1,4 @@
-package wbs.trails.trails;
+package wbs.trails.menus;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import wbs.trails.WbsTrails;
 import wbs.trails.menus.MainMenu;
-import wbs.trails.menus.build.BuildMenu;
+import wbs.trails.menus.build.ChooseTrailMenu;
 import wbs.utils.util.menus.MenuSlot;
 
 import java.util.Objects;
@@ -32,6 +32,8 @@ public final class TrailMenuUtils {
                 Bukkit.getItemFactory().getItemMeta(outlineMaterial)
         );
         meta.setDisplayName("&r");
+
+        outlineItem.setItemMeta(meta);
 
         outlineSlot = new MenuSlot(plugin, outlineItem);
         return outlineSlot;
@@ -92,7 +94,30 @@ public final class TrailMenuUtils {
         buildLink.setClickAction(
                 (event) -> {
                     Player player = (Player) event.getWhoClicked();
-                    new BuildMenu(plugin, player).showTo(player);
+                    new ChooseTrailMenu(plugin, player).showTo(player);
+                }
+        );
+
+        return buildLink;
+    }
+
+    public static MenuSlot getPresetsLink() {
+        Material material = Material.KNOWLEDGE_BOOK;
+
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = Objects.requireNonNull(
+                Bukkit.getItemFactory().getItemMeta(material)
+        );
+        meta.setDisplayName("&dPreset Trails");
+
+        item.setItemMeta(meta);
+
+        MenuSlot buildLink = new MenuSlot(plugin, item);
+
+        buildLink.setClickAction(
+                (event) -> {
+                    Player player = (Player) event.getWhoClicked();
+                    new PresetsMenu(plugin, player).showTo(player);
                 }
         );
 

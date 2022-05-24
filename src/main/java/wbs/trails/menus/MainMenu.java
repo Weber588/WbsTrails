@@ -1,6 +1,5 @@
 package wbs.trails.menus;
 
-import wbs.trails.trails.TrailMenuUtils;
 import wbs.utils.util.menus.WbsMenu;
 import wbs.utils.util.plugin.WbsPlugin;
 
@@ -23,10 +22,8 @@ public final class MainMenu extends WbsMenu {
 
         setOutline(TrailMenuUtils.getOutlineSlot());
 
-        setSlot(1, 1, TrailMenuUtils.getBuildLink());
+        setSlot(1, 2, TrailMenuUtils.getBuildLink());
 
-        setSlot(1, 4, TrailMenuUtils.getBuildLink());
-
-        setSlot(1, 7, TrailMenuUtils.getBuildLink());
+        setSlot(1, 6, TrailMenuUtils.getPresetsLink());
     }
 }
