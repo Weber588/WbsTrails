@@ -2,6 +2,9 @@ package wbs.trails.trails.options;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
+import wbs.trails.WbsTrails;
+import wbs.trails.menus.build.options.ConfigOptionSlot;
+import wbs.trails.menus.build.options.IntegerOptionSlot;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -48,5 +51,10 @@ public class IntegerOption<T> extends NumericOption<T, Integer> {
     @Override
     protected Integer valueFromConfig(ConfigurationSection section) {
         return section.getInt(getName(), defaultValue);
+    }
+
+    @Override
+    public ConfigOptionSlot<T, Integer> newSlot() {
+        return new IntegerOptionSlot<>(WbsTrails.getInstance(), this);
     }
 }

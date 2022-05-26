@@ -4,53 +4,53 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wbs.trails.WbsTrails;
+import wbs.trails.menus.TrailMenuUtils;
 import wbs.trails.trails.RegisteredTrail;
+import wbs.trails.trails.Trail;
 import wbs.trails.trails.data.DataManager;
 import wbs.trails.trails.data.DataProducer;
 import wbs.utils.util.WbsEnums;
 import wbs.utils.util.entities.WbsEntityUtil;
 import wbs.utils.util.menus.MenuSlot;
 import wbs.utils.util.menus.PagedMenu;
-import wbs.utils.util.menus.WbsMenu;
 import wbs.utils.util.particles.NormalParticleEffect;
 import wbs.utils.util.particles.WbsParticleEffect;
-import wbs.utils.util.plugin.WbsPlugin;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ChooseParticleMenu extends PagedMenu<Particle> {
+public class ChooseParticleMenu<T extends Trail<T>> extends PagedMenu<Particle> implements BuildMenu {
 
+    private final BuildMenu lastPage;
     private final Player player;
-    @NotNull
-    private final WbsTrails plugin;
-    private final RegisteredTrail<?> registration;
+    private final T trail;
 
-    public ChooseParticleMenu(@NotNull WbsTrails plugin, RegisteredTrail<?> registration, Player player) {
-        this(plugin, registration, player, 0);
+    public ChooseParticleMenu(WbsTrails plugin, BuildMenu lastPage, T trail, Player player) {
+        this(plugin, lastPage, trail, player, 0);
     }
-    public ChooseParticleMenu(@NotNull WbsTrails plugin, RegisteredTrail<?> registration, Player player, int page) {
+    public ChooseParticleMenu(WbsTrails plugin, BuildMenu lastPage, T trail, Player player, int page) {
         super(plugin,
                 plugin.settings.getAllowedParticlesFor(player).stream()
                         .sorted(Comparator.comparing(Particle::name))
                         .collect(Collectors.toList()),
                 "&4&lChoose a particle!",
                 "particle:" + player.getUniqueId(),
-                1,
-                4,
-                1,
-                7,
+                1, // rowStart
+                4, // maxRows
+                1, // minColumn
+                7, // maxColumn
                 page);
 
+        this.lastPage = lastPage;
         this.player = player;
-        this.plugin = plugin;
-        this.registration = registration;
+        this.trail = trail;
 
         setUnregisterOnClose(true);
+        setSlot(rows - 1, 1, getBackSlot());
     }
 
     @Override
@@ -69,26 +69,36 @@ public class ChooseParticleMenu extends PagedMenu<Particle> {
                 super.plugin.colouriseAll(lore));
 
         slot.setClickAction(event -> {
+            Class<?> dataType = particle.getDataType();
+            DataProducer<?, ?> producer = DataManager.getProducer(dataType);
+
             if (event.isShiftClick()) {
                 WbsParticleEffect effect = new NormalParticleEffect().setX(1).setY(2).setZ(1).setAmount(15);
 
-                DataProducer<?, ?> producer = DataManager.getProducer(particle.getDataType());
-
-                Object options = null;
-                if (producer != null) {
-                    options = producer.produce();
-                }
-
-                if (options != null) {
-                    effect.setOptions(options);
+                if (dataType != Void.class) {
+                    if (producer != null) {
+                        effect.setOptions(producer.produce());
+                    } else {
+                        plugin.sendMessage("&wData type not configured for this particle.", player);
+                        return;
+                    }
                 }
 
                 effect.play(particle, WbsEntityUtil.getMiddleLocation(player), player);
                 return;
             }
 
-            // TODO: Go to DataOptionsMenu if particle has data
-            new TrailOptionsMenu<>(plugin, registration, player).showTo(player);
+            trail.setParticle(particle);
+
+            if (producer == null) {
+                plugin.runSync(() ->
+                        new TrailOptionsMenu<>(plugin, this, trail, player).showTo(player));
+            } else {
+                plugin.runSync(() -> {
+                    trail.setData(producer);
+                    producer.getMenu(this, trail, player).showTo(player);
+                });
+            }
         });
 
         return slot;
@@ -96,6 +106,11 @@ public class ChooseParticleMenu extends PagedMenu<Particle> {
 
     @Override
     protected PagedMenu<Particle> getPage(int page) {
-        return new ChooseParticleMenu(plugin, registration, player, page);
+        return new ChooseParticleMenu<>(WbsTrails.getInstance(), lastPage, trail, player, page);
+    }
+
+    @Override
+    public @Nullable BuildMenu getLastPage() {
+        return lastPage;
     }
 }

@@ -4,7 +4,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.trails.WbsTrails;
-import wbs.trails.menus.PlayerSpecificMenu;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.menus.WbsMenu;
 

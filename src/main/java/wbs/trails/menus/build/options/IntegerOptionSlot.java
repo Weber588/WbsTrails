@@ -15,10 +15,13 @@ import wbs.utils.util.string.WbsStrings;
 
 import java.util.Arrays;
 
-public class IntegerOptionSlot<T> extends ConfigOptionSlot<T, Integer, IntegerOption<T>> {
+public class IntegerOptionSlot<T> extends ConfigOptionSlot<T, Integer> {
+    private final IntegerOption<T> option;
+
     public IntegerOptionSlot(@NotNull WbsPlugin plugin, IntegerOption<T> option) {
         super(plugin, option, getItem(option, option.getDefaultValue()));
 
+        this.option = option;
         setClickActionMenu(this::onClick);
     }
 

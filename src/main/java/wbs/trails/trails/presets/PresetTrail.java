@@ -142,4 +142,8 @@ public class PresetTrail<T extends Trail<T>> {
     public void setName(@NotNull String name) {
         this.name = name;
     }
+
+    public boolean hasPermission(Player player) {
+        return player.hasPermission(getPermission()) && player.hasPermission(registration.getPermission());
+    }
 }

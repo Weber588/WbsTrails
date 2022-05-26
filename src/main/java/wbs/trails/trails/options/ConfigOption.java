@@ -3,6 +3,7 @@ package wbs.trails.trails.options;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wbs.trails.menus.build.options.ConfigOptionSlot;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -83,4 +84,6 @@ public abstract class ConfigOption<T, V> {
     public V getDefaultValue() {
         return defaultValue;
     }
+
+    public abstract ConfigOptionSlot<T, V> newSlot();
 }

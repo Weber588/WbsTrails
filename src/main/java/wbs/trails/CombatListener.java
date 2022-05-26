@@ -44,9 +44,6 @@ public class CombatListener extends WbsMessenger implements Listener {
 		}
 		
 		TrailsController controller = TrailsController.getInstance();
-
-		controller.setLastHit(attacker);
-		controller.setLastHit(victim);
 		
 		if (controller.hasActiveTrails(victim)) {
 			controller.toggle(victim);
@@ -79,7 +76,6 @@ public class CombatListener extends WbsMessenger implements Listener {
 		}
 
 		TrailsController controller = TrailsController.getInstance();
-		controller.setLastHit(victim);
 		
 		if (controller.hasActiveTrails(victim)) {
 			controller.toggle(victim);
@@ -101,7 +97,6 @@ public class CombatListener extends WbsMessenger implements Listener {
 		Player victim = (Player) entity;
 		
 		TrailsController controller = TrailsController.getInstance();
-		controller.setLastHit(victim);
 		
 		if (controller.hasActiveTrails(victim)) {
 			controller.toggle(victim);

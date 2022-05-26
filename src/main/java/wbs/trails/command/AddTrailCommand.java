@@ -3,6 +3,7 @@ package wbs.trails.command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wbs.trails.TrailsController;
 import wbs.trails.WbsTrails;
 import wbs.trails.trails.Trail;
 
@@ -22,24 +23,14 @@ public class AddTrailCommand extends TrailsSubcommand {
         }
         Player player = (Player) sender;
 
-        if (!controller.canHaveMore(player)) {
-            sendMessage("&wYou cannot have any more trails. Use &h/trails clear&w or &h/trails remove&w to change trails!", player);
-            return true;
-        }
-
+        TrailsController controller = TrailsController.getInstance();
         Trail<?> trail = buildTrail(player, args);
-        if (trail == null) {
-            return true;
-        }
+        if (controller.tryAddTrail(player, trail)) {
+            trail.enable();
 
-        if (!controller.addTrail(player, trail)) {
-            sendMessage("You cannot add trails while your other trails are disabled.", player);
-            return true;
+            Collection<Trail<?>> trails = controller.getTrails(player);
+            sendMessage("Trail added. You have &h" + trails.size() + "&r trails active.", player);
         }
-        trail.enable();
-
-        Collection<Trail<?>> trails = controller.getTrails(player);
-        sendMessage("Trail added. You have &h" + trails.size() + "&r trails active.", player);
 
         return true;
     }

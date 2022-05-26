@@ -38,8 +38,6 @@ public class PresetsMenu extends PagedMenu<PresetTrail<?>> {
         setUnregisterOnClose(true);
     }
 
-    private final int LINE_LENGTH = 20;
-
     @Override
     protected MenuSlot getSlot(PresetTrail<?> presetTrail) {
         List<String> lore = new LinkedList<>();
@@ -50,14 +48,15 @@ public class PresetsMenu extends PagedMenu<PresetTrail<?>> {
             StringBuilder currentLine = new StringBuilder();
             int lineLength = 0;
             for (String word : words) {
-                if (word.length() >= LINE_LENGTH && !currentLine.toString().equals("")) {
+                final int MAX_LINE_LENGTH = 20;
+                if (word.length() >= MAX_LINE_LENGTH && !currentLine.toString().equals("")) {
                     lore.add(word);
                     continue;
                 }
 
                 lineLength += word.length() + 1;
 
-                if (lineLength > LINE_LENGTH) {
+                if (lineLength > MAX_LINE_LENGTH) {
                     lineLength = 0;
                     lore.add("&7" + currentLine);
                     currentLine = new StringBuilder(word).append(" ");
@@ -80,23 +79,18 @@ public class PresetsMenu extends PagedMenu<PresetTrail<?>> {
 
         slot.setClickAction(event -> {
             Player player = (Player) event.getWhoClicked();
-            // TODO: Centralize these messages somewhere
-            if (!player.hasPermission(presetTrail.getPermission())) {
+
+            if (!presetTrail.hasPermission(player)) {
                 plugin.sendMessage("&wYou don't have permission to use that trail.", player);
                 return;
             }
 
             TrailsController controller = TrailsController.getInstance();
-            if (controller.canHaveMore(player)) {
-                Trail<?> trail = presetTrail.getTrail(player);
-                if (!controller.addTrail(player, trail)) {
-                    plugin.sendMessage("&wYou cannot add trails while your other trails are disabled.", player);
-                    return;
-                }
+            Trail<?> trail = presetTrail.getTrail(player);
+            if (controller.tryAddTrail(player, trail)) {
                 trail.enable();
+
                 plugin.sendMessage("Trail enabled!", player);
-            } else {
-                plugin.sendMessage("&wYou cannot have any more trails. Use &h/trails clear&w or &h/trails remove&w to change trails!", player);
             }
         });
 

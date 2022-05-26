@@ -22,20 +22,20 @@ public class TrailsController {
 		return instance;
 	}
 
-	private WbsTrails plugin;
+	private final WbsTrails plugin;
 	private final TrailsSettings settings;
 	
 	private TrailsController() {
 		plugin = WbsTrails.getInstance();
 		settings = plugin.settings;
 	}
-	
+
 	private final Map<Player, Boolean> hasActiveTrails = new HashMap<>();
 	public boolean hasActiveTrails(Player player) {
 		if (hasActiveTrails.containsKey(player)) {
 			return hasActiveTrails.get(player);
 		}
-		
+
 		return false;
 	}
 
@@ -89,6 +89,35 @@ public class TrailsController {
 		hasActiveTrails.put(player, true);
 		return true;
 	}
+
+	/**
+	 * Try to add a trail to a player, sending errors to that player if anything goes wrong.
+	 * @param player The player to register the trail for, and to send errors to.
+	 * @param trail The trail to register to the given player
+	 * @return True if the trail was registered successfully and no message was sent, false if
+	 * an error occurred and the player was already messaged.
+	 */
+	public boolean tryAddTrail(Player player, Trail<?> trail) {
+		if (!player.hasPermission(trail.getRegistration().getPermission())) {
+			plugin.sendMessage("&wYou don't have permission to use that trail.", player);
+			return false;
+		}
+
+		if (!canHaveMore(player)) {
+			plugin.sendMessage("&wYou cannot have any more trails. Use &h/trails clear&w or &h/trails remove&w to change trails!", player);
+			return false;
+		}
+
+		if (!addTrail(player, trail)) {
+			plugin.sendMessage("You cannot add trails while your other trails are disabled.", player);
+			return false;
+		}
+		trail.enable();
+
+		Collection<Trail<?>> trails = getTrails(player);
+		plugin.sendMessage("Trail added. You have &h" + trails.size() + "&r trails active.", player);
+		return true;
+	}
 	
 	public void removeTrail(Player player, Trail<?> trail) {
 		playerTrails.remove(player, trail);
@@ -124,19 +153,6 @@ public class TrailsController {
 				}
 			}
 		}.runTaskTimer(plugin, 0L, settings.getRefreshRate()).getTaskId();
-	}
-	
-	private final Map<Player, LocalDateTime> lastHits = new HashMap<>();
-	public void setLastHit(Player player) {
-		lastHits.put(player, LocalDateTime.now());
-	}
-	
-	public void removeLastHit(Player player) {
-		lastHits.remove(player);
-	}
-	
-	public LocalDateTime getLastHit(Player player) {
-		return lastHits.get(player);
 	}
 
 	public List<Trail<?>> getActiveTrails(Player player) {

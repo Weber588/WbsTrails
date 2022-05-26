@@ -4,49 +4,15 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import wbs.trails.trails.options.ConfigOption;
-import wbs.utils.util.WbsEnums;
 import wbs.utils.util.particles.data.ItemStackProvider;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
-public class ItemStackProducer extends DataProducer<ItemStack, ItemStackProducer> {
+public class ItemStackProducer extends MaterialDataProducer<ItemStack, ItemStackProducer> {
     public static ItemStackProducer deserialize(ConfigurationSection section, String path) {
         ItemStackProducer created = new ItemStackProducer();
 
-        String materialString = section.getString(path + ".material");
-        created.material = WbsEnums.materialFromString(materialString);
-
-        return created;
-    }
-
-    private Material material = Material.SAND;
-
-    @Override
-    public int configure(String[] args) {
-        if (args.length < 1) {
-            throw new IllegalArgumentException("This particle requires additional data.");
-        }
-
-        material = WbsEnums.materialFromString(args[0], Material.AIR);
-
-        if (!material.isItem()) {
-            throw new IllegalArgumentException("That is not a valid item.");
-        }
-
-        return 1;
-    }
-
-    @Override
-    public void writeToConfig(ConfigurationSection section, String path) {
-        section.set(path + ".material", material.name());
-    }
-
-    @Override
-    public Collection<ConfigOption<ItemStackProducer, ?>> getDataOptions() {
-        return new LinkedList<>();
+        return MaterialDataProducer.configure(created, section, path);
     }
 
     @Override
@@ -60,21 +26,17 @@ public class ItemStackProducer extends DataProducer<ItemStack, ItemStackProducer
     }
 
     @Override
-    @Nullable
-    public List<String> handleTab(String[] args) {
-        if (args.length == 1) {
-            return Arrays.stream(Material.values())
-                    .filter(Material::isItem)
-                    .map(Enum::name)
-                    .map(String::toLowerCase)
-                    .collect(Collectors.toList());
-        }
-
-        return null;
+    public String getUsage() {
+        return "<item>";
     }
 
     @Override
-    public String getUsage() {
-        return "<block>";
+    protected boolean isValid(Material check) {
+        return check.isItem();
+    }
+
+    @Override
+    protected String getInvalidMaterialString() {
+        return "That is not a valid block.";
     }
 }

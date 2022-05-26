@@ -2,6 +2,9 @@ package wbs.trails.trails.options;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.Nullable;
+import wbs.trails.WbsTrails;
+import wbs.trails.menus.build.options.ConfigOptionSlot;
+import wbs.trails.menus.build.options.DoubleOptionSlot;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -48,5 +51,10 @@ public class DoubleOption<T> extends NumericOption<T, Double> {
     @Override
     protected Double valueFromConfig(ConfigurationSection section) {
         return section.getDouble(getName(), defaultValue);
+    }
+
+    @Override
+    public ConfigOptionSlot<T, Double> newSlot() {
+        return new DoubleOptionSlot<>(WbsTrails.getInstance(), this);
     }
 }

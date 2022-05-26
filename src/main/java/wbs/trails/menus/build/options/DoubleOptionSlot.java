@@ -15,9 +15,14 @@ import wbs.utils.util.string.WbsStrings;
 
 import java.util.Arrays;
 
-public class DoubleOptionSlot<T> extends ConfigOptionSlot<T, Double, DoubleOption<T>> {
+public class DoubleOptionSlot<T> extends ConfigOptionSlot<T, Double> {
+
+    private final DoubleOption<T> option;
+
     public DoubleOptionSlot(@NotNull WbsPlugin plugin, DoubleOption<T> option) {
         super(plugin, option, getItem(option, option.getDefaultValue()));
+
+        this.option = option;
 
         setClickActionMenu(this::onClick);
     }

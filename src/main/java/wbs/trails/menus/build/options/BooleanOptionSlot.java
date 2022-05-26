@@ -8,15 +8,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import wbs.trails.WbsTrails;
 import wbs.trails.trails.options.BooleanOption;
+import wbs.trails.trails.options.DoubleOption;
 import wbs.utils.util.menus.WbsMenu;
 import wbs.utils.util.plugin.WbsPlugin;
 import wbs.utils.util.string.WbsStrings;
 
 import java.util.Collections;
 
-public class BooleanOptionSlot<T> extends ConfigOptionSlot<T, Boolean, BooleanOption<T>> {
+public class BooleanOptionSlot<T> extends ConfigOptionSlot<T, Boolean> {
+    private final BooleanOption<T> option;
+
     public BooleanOptionSlot(@NotNull WbsPlugin plugin, BooleanOption<T> option) {
         super(plugin, option, getItem(option, option.getDefaultValue()));
+
+        this.option = option;
 
         setClickActionMenu(this::onClick);
     }

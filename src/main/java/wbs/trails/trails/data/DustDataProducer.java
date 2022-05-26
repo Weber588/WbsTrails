@@ -2,11 +2,18 @@ package wbs.trails.trails.data;
 
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import wbs.trails.WbsTrails;
+import wbs.trails.menus.build.BuildMenu;
+import wbs.trails.menus.build.data.DustDataMenu;
+import wbs.trails.trails.Trail;
 import wbs.trails.trails.options.ConfigOption;
 import wbs.trails.trails.options.DoubleOption;
+import wbs.trails.trails.options.IntegerOption;
+import wbs.utils.util.menus.WbsMenu;
 import wbs.utils.util.particles.data.DustOptionsProvider;
 import wbs.utils.util.providers.NumProvider;
 import wbs.utils.util.providers.VectorProvider;
@@ -35,9 +42,9 @@ public class DustDataProducer extends DataProducer<Particle.DustOptions, DustDat
 
     private static final String RAINBOW_STRING = "rainbow";
 
-    private int red;
-    private int green;
-    private int blue;
+    private int red = 255;
+    private int green = 0;
+    private int blue = 0;
 
     private float size = 1;
 
@@ -131,16 +138,11 @@ public class DustDataProducer extends DataProducer<Particle.DustOptions, DustDat
         List<ConfigOption<DustDataProducer, ?>> options = new LinkedList<>();
 
         if (rainbow) {
-            options.add(new DoubleOption<>("rainbowSpeed", 1, 0.2, 10,
-                    (producer, newValue) -> producer.rainbowSpeed = newValue,
-                    producer -> producer.rainbowSpeed));
+            options.add(getRainbowSpeedOption());
 
-            options.add(new DoubleOption<>("saturation", 1, 0, 1,
-                    (producer, newValue) -> producer.saturation = newValue,
-                    producer -> producer.saturation));
-            options.add(new DoubleOption<>("brightness", 1, 0, 1,
-                    (producer, newValue) -> producer.brightness = newValue,
-                    producer -> producer.brightness));
+            options.add(getSaturationOption());
+
+            options.add(getBrightnessOption());
         }
         return options;
     }
@@ -148,6 +150,56 @@ public class DustDataProducer extends DataProducer<Particle.DustOptions, DustDat
     @Override
     public Class<Particle.DustOptions> getDataClass() {
         return Particle.DustOptions.class;
+    }
+
+    @Override
+    public <T extends Trail<T>> WbsMenu getMenu(BuildMenu lastPage, T trail, Player player) {
+        return new DustDataMenu<>(WbsTrails.getInstance(), lastPage, this, trail, player);
+    }
+
+    public IntegerOption<DustDataProducer> getRedOption() {
+        return new IntegerOption<>("red",
+                255,
+                0,
+                255,
+                (producer, integer) -> producer.red = integer,
+                producer -> producer.red);
+    }
+
+    public IntegerOption<DustDataProducer> getGreenOption() {
+        return new IntegerOption<>("green",
+                0,
+                0,
+                255,
+                (producer, integer) -> producer.green = integer,
+                producer -> producer.green);
+    }
+
+    public IntegerOption<DustDataProducer> getBlueOption() {
+        return new IntegerOption<>("blue",
+                0,
+                0,
+                255,
+                (producer, integer) -> producer.blue = integer,
+                producer -> producer.blue);
+    }
+
+    public DoubleOption<DustDataProducer> getRainbowSpeedOption() {
+        return new DoubleOption<>("rainbowSpeed", 1, 0.2, 10,
+                (producer, newValue) -> producer.rainbowSpeed = newValue,
+                producer -> producer.rainbowSpeed);
+    }
+
+    public DoubleOption<DustDataProducer> getSaturationOption() {
+        return new DoubleOption<>("saturation", 1, 0, 1,
+                (producer, newValue) -> producer.saturation = newValue,
+                producer -> producer.saturation);
+    }
+
+    public DoubleOption<DustDataProducer> getBrightnessOption() {
+        return new DoubleOption<>("brightness", 1, 0, 1,
+                (producer, newValue) -> producer.brightness = newValue,
+                producer -> producer.brightness);
     }
 
     @Override

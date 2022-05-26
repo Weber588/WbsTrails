@@ -7,8 +7,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import wbs.trails.WbsTrails;
 import wbs.trails.menus.MainMenu;
+import wbs.trails.menus.build.BuildMenu;
 import wbs.trails.menus.build.ChooseTrailMenu;
 import wbs.utils.util.menus.MenuSlot;
+import wbs.utils.util.menus.WbsMenu;
 
 import java.util.Objects;
 
@@ -71,7 +73,8 @@ public final class TrailMenuUtils {
 
         mainMenuLink.setClickAction(
                 (event) -> {
-                    getMainMenu().showTo((Player) event.getWhoClicked());
+                    plugin.runSync(() ->
+                            getMainMenu().showTo((Player) event.getWhoClicked()));
                 }
         );
 
@@ -94,7 +97,9 @@ public final class TrailMenuUtils {
         buildLink.setClickAction(
                 (event) -> {
                     Player player = (Player) event.getWhoClicked();
-                    new ChooseTrailMenu(plugin, player).showTo(player);
+
+                    plugin.runSync(() ->
+                            new ChooseTrailMenu(plugin, player).showTo(player));
                 }
         );
 
@@ -117,12 +122,12 @@ public final class TrailMenuUtils {
         buildLink.setClickAction(
                 (event) -> {
                     Player player = (Player) event.getWhoClicked();
-                    new PresetsMenu(plugin, player).showTo(player);
+
+                    plugin.runSync(() ->
+                            new PresetsMenu(plugin, player).showTo(player));
                 }
         );
 
         return buildLink;
     }
-
-
 }

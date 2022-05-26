@@ -76,19 +76,19 @@ particle-sets:
 
 trails-options:
   AURA:
-    description: Simply a slow spawning trail of particles that surround you
+    description: Slow-spawning particles that surround your body!
     amount:
       default: 3
       min: 1
       max: 5
   CLOUD:
-    description: A wide disc of particles that goes around your feet
+    description: A disc of particles that spawn on the ground around you!
     radius:
       default: 1
       min: 0.4
       max: 1.2
   CUBE:
-    description: Particles spawn in the outline of a cube around you
+    description: Particles spawn in the outline of a cube around you, rotating and floating gently!
     amount:
       default: 5
       min: 1
@@ -104,7 +104,7 @@ trails-options:
     bounce:
       default: true
   ELECTRIC:
-    description: Tiny arcs appear around you as if you were sparking.
+    description: Small arcs of particles appear around you as if you were sparking.
   HALO:
     description: A ring of particles that hover above your head
   HELIX:
