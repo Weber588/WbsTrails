@@ -1,9 +1,11 @@
 package wbs.trails.trails;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.trails.trails.options.ConfigOption;
+import wbs.utils.util.WbsEnums;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,6 +26,8 @@ public class RegisteredTrail<T extends Trail<T>> {
     private final BiFunction<RegisteredTrail<T>, Player, T> producer;
 
     private String description;
+    @NotNull
+    private Material material;
 
     private final Map<String, ConfigOption<T, ?>> options = new HashMap<>();
 
@@ -31,6 +35,7 @@ public class RegisteredTrail<T extends Trail<T>> {
         this.name = name;
         this.trailClass = trailClass;
         this.producer = producer;
+        material = Material.OAK_SIGN;
 
         try {
             Method registerOption = trailClass.getDeclaredMethod(REGISTER_OPTIONS_METHOD, RegisteredTrail.class);
@@ -84,6 +89,7 @@ public class RegisteredTrail<T extends Trail<T>> {
         }
 
         description = section.getString("description");
+        material = WbsEnums.materialFromString(section.getString("material"), material);
     }
 
     public Collection<ConfigOption<T, ?>> getOptions() {
@@ -92,5 +98,10 @@ public class RegisteredTrail<T extends Trail<T>> {
 
     public String getPermission() {
         return "wbstrails.type." + getName().toLowerCase();
+    }
+
+    @NotNull
+    public Material getMaterial() {
+        return material;
     }
 }

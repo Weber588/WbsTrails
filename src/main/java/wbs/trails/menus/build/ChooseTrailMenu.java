@@ -1,6 +1,5 @@
 package wbs.trails.menus.build;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import wbs.trails.WbsTrails;
@@ -9,6 +8,7 @@ import wbs.trails.trails.RegisteredTrail;
 import wbs.trails.trails.Trail;
 import wbs.trails.trails.TrailManager;
 import wbs.utils.util.menus.MenuSlot;
+import wbs.utils.util.menus.PageSlot;
 import wbs.utils.util.menus.PagedMenu;
 import wbs.utils.util.plugin.WbsPlugin;
 import wbs.utils.util.string.WbsStrings;
@@ -16,7 +16,7 @@ import wbs.utils.util.string.WbsStrings;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ChooseTrailMenu extends PagedMenu<RegisteredTrail<?>> implements BuildMenu {
+public class ChooseTrailMenu extends PagedMenu<RegisteredTrail<?>> implements MenuPage {
 
     private final Player player;
 
@@ -37,11 +37,12 @@ public class ChooseTrailMenu extends PagedMenu<RegisteredTrail<?>> implements Bu
         this.player = player;
 
         setUnregisterOnClose(true);
-        setOutline(TrailMenuUtils.getOutlineSlot());
+        setOutline(TrailMenuUtils.getOutlineSlot(), false);
+        setSlot(0, 0, TrailMenuUtils.getMainMenuLink());
     }
 
     @Override
-    protected MenuSlot getSlot(RegisteredTrail<?> registeredTrail) {
+    protected PageSlot<RegisteredTrail<?>> getSlot(RegisteredTrail<?> registeredTrail) {
         List<String> lore = new LinkedList<>();
 
         String[] words = registeredTrail.getDescription().split(" ");
@@ -74,7 +75,7 @@ public class ChooseTrailMenu extends PagedMenu<RegisteredTrail<?>> implements Bu
         name = WbsStrings.capitalizeAll(name);
         name = plugin.dynamicColourise("&b" + name);
 
-        MenuSlot slot = new MenuSlot(plugin, Material.OAK_SIGN, name, plugin.colouriseAll(lore));
+        PageSlot<RegisteredTrail<?>> slot = new PageSlot<>(plugin, registeredTrail, registeredTrail.getMaterial(), name, plugin.colouriseAll(lore));
 
         slot.setClickAction(event -> choose(registeredTrail));
 
@@ -94,7 +95,7 @@ public class ChooseTrailMenu extends PagedMenu<RegisteredTrail<?>> implements Bu
     }
 
     @Override
-    public @Nullable BuildMenu getLastPage() {
+    public @Nullable MenuPage getLastPage() {
         return null;
     }
 }

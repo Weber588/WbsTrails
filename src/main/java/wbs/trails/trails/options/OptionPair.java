@@ -30,4 +30,8 @@ public class OptionPair<T, V> {
     public void writeToConfig(ConfigurationSection section) {
         section.set(option.getName(), value);
     }
+
+    public V getValue() {
+        return value;
+    }
 }

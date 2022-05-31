@@ -52,8 +52,12 @@ public class HornsTrail extends Trail<HornsTrail> {
 	
 	private final CustomParticleEffect effect = new CustomParticleEffect() {
 
+
+
 		@Override
 		public CustomParticleEffect play(Particle particle, Location loc) {
+			refreshProviders();
+
 			World world = loc.getWorld();
 			assert world != null;
 			ArrayList<Location> locations = getLocations(loc);
@@ -72,6 +76,8 @@ public class HornsTrail extends Trail<HornsTrail> {
 
 		@Override
 		public WbsParticleEffect play(Particle particle, Location location, Player player) {
+			refreshProviders();
+
 			ArrayList<Location> locations = getLocations(location);
 
 			if (options == null) {

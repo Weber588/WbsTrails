@@ -2,9 +2,9 @@ package wbs.trails;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-
 import wbs.trails.command.TrailsCommand;
+import wbs.trails.listeners.ChatStringReader;
+import wbs.trails.listeners.CombatListener;
 import wbs.trails.trails.Trail;
 import wbs.trails.trails.TrailManager;
 import wbs.utils.util.plugin.WbsPlugin;
@@ -22,7 +22,11 @@ public class WbsTrails extends WbsPlugin {
 	public void onEnable() {
 		instance = this;
 		if (!getDataFolder().exists()) {
-			getDataFolder().mkdir();
+			if (!getDataFolder().mkdir()) {
+				pluginManager.disablePlugin(this);
+				logger.severe("Failed to create data folder.");
+				return;
+			}
 		}
 
 		TrailManager.registerNativeTrails();
@@ -34,9 +38,9 @@ public class WbsTrails extends WbsPlugin {
 		TrailsController.getInstance().startTimers();
 
 		new TrailsCommand(this, getCommand("trails"));
-		
-	    PluginManager pm = Bukkit.getServer().getPluginManager();
-	    pm.registerEvents(new CombatListener(this), this);
+
+		registerListener(new CombatListener(this));
+	    registerListener(new ChatStringReader());
 
 	}
 

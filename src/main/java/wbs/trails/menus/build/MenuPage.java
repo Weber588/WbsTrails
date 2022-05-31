@@ -7,18 +7,14 @@ import wbs.trails.WbsTrails;
 import wbs.utils.util.menus.MenuSlot;
 import wbs.utils.util.menus.WbsMenu;
 
-public interface BuildMenu {
+public interface MenuPage {
     @Nullable
-    BuildMenu getLastPage();
+    MenuPage getLastPage();
 
     default void back(Player player) {
-        BuildMenu lastPage = getLastPage();
+        MenuPage lastPage = getLastPage();
 
         if (lastPage != null) {
-            if (this instanceof WbsMenu) {
-                ((WbsMenu) this).unregister();
-            }
-
             if (lastPage instanceof WbsMenu) {
                 WbsTrails.getInstance().runSync(
                         () -> ((WbsMenu) lastPage).showTo(player)

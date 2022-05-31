@@ -14,7 +14,7 @@ public class BlockDataProducer extends MaterialDataProducer<BlockData, BlockData
     }
 
     @Override
-    public @NotNull BlockData produce() {
+    public @NotNull BlockData produce(@NotNull Material material) {
         return Bukkit.createBlockData(material);
     }
 

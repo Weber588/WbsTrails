@@ -16,7 +16,7 @@ import wbs.utils.util.string.WbsStrings;
 import java.util.Arrays;
 
 public class IntegerOptionSlot<T> extends ConfigOptionSlot<T, Integer> {
-    private final IntegerOption<T> option;
+    protected final IntegerOption<T> option;
 
     public IntegerOptionSlot(@NotNull WbsPlugin plugin, IntegerOption<T> option) {
         super(plugin, option, getItem(option, option.getDefaultValue()));
@@ -26,6 +26,13 @@ public class IntegerOptionSlot<T> extends ConfigOptionSlot<T, Integer> {
     }
 
     private void onClick(WbsMenu menu, InventoryClickEvent event) {
+        updateCurrent(event);
+        menu.update(event.getSlot());
+    }
+
+    protected void updateCurrent(InventoryClickEvent event) {
+        int current = getCurrent();
+
         switch (event.getClick()) {
             case LEFT:
             case SHIFT_LEFT:
@@ -47,15 +54,18 @@ public class IntegerOptionSlot<T> extends ConfigOptionSlot<T, Integer> {
                 break;
         }
 
-        current = WbsMath.clamp(option.getMin(), option.getMax(), current);
+        setCurrent(current);
+    }
 
+    public void updateItem() {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        updateLore(meta, current);
+        updateLore(meta, getCurrent());
 
         item.setItemMeta(meta);
-        menu.update(event.getSlot());
+
+        item.setAmount(getCurrent());
     }
 
     private static ItemStack getItem(IntegerOption<?> option, int value) {

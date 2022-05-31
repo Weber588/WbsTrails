@@ -77,18 +77,21 @@ particle-sets:
 trails-options:
   AURA:
     description: Slow-spawning particles that surround your body!
+    material: BEACON
     amount:
       default: 3
       min: 1
       max: 5
   CLOUD:
     description: A disc of particles that spawn on the ground around you!
+    material: SNOW_BLOCK
     radius:
       default: 1
       min: 0.4
       max: 1.2
   CUBE:
     description: Particles spawn in the outline of a cube around you, rotating and floating gently!
+    material: SPAWNER
     amount:
       default: 5
       min: 1
@@ -105,10 +108,13 @@ trails-options:
       default: true
   ELECTRIC:
     description: Small arcs of particles appear around you as if you were sparking.
+    material: TRIDENT
   HALO:
     description: A ring of particles that hover above your head
+    material: ELYTRA
   HELIX:
     description: Two orbs circle you while moving up and down, creating a spiral around your body
+    material: TWISTING_VINES
     amount:
       default: 3
       min: 1
@@ -123,8 +129,10 @@ trails-options:
       max: 15
   HORNS:
     description: Particle horns!
+    material: WITHER_SKELETON_SKULL
   ORBITER:
     description: A group of particles that circles around you
+    material: STRING
     amount:
       default: 2
       min: 1
@@ -145,6 +153,7 @@ trails-options:
       default: true
   STANDARD:
     description: A small sphere of particles that follows you as you move
+    material: LEATHER_BOOTS
     amount:
       default: 5
       min: 1

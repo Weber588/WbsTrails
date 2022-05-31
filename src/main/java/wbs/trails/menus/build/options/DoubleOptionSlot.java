@@ -28,6 +28,8 @@ public class DoubleOptionSlot<T> extends ConfigOptionSlot<T, Double> {
     }
 
     private void onClick(WbsMenu menu, InventoryClickEvent event) {
+        double current = getCurrent();
+
         switch (event.getClick()) {
             case LEFT:
                 current++;
@@ -59,13 +61,19 @@ public class DoubleOptionSlot<T> extends ConfigOptionSlot<T, Double> {
         current = WbsMath.clamp(option.getMin(), option.getMax(), current);
         current = WbsMath.roundTo(current, 2);
 
+        setCurrent(current);
+        menu.update(event.getSlot());
+    }
+
+    @Override
+    public void updateItem() {
+        double current = getCurrent();
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
         updateLore(meta, current);
 
         item.setItemMeta(meta);
-        menu.update(event.getSlot());
     }
 
     private static ItemStack getItem(DoubleOption<?> option, double value) {
@@ -92,7 +100,7 @@ public class DoubleOptionSlot<T> extends ConfigOptionSlot<T, Double> {
 
     private static void updateLore(ItemMeta meta, double value) {
         meta.setLore(WbsTrails.getInstance().colouriseAll(
-                Arrays.asList("&6Current: &b" + value,
+                Arrays.asList("&6Current: &b" + WbsMath.roundTo(value, 2),
                         "&7Left Click: &b+1",
                         "&7Right Click: &b-1",
                         "&7Shift Left Click: &b+0.1",

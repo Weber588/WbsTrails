@@ -3,9 +3,10 @@ package wbs.trails.trails.data;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.trails.WbsTrails;
-import wbs.trails.menus.build.BuildMenu;
+import wbs.trails.menus.build.MenuPage;
 import wbs.trails.menus.build.data.MaterialDataMenu;
 import wbs.trails.trails.Trail;
 import wbs.trails.trails.options.ConfigOption;
@@ -72,7 +73,7 @@ public abstract class MaterialDataProducer<D, P extends DataProducer<D, P>> exte
     }
 
     @Override
-    public <T extends Trail<T>> WbsMenu getMenu(BuildMenu lastPage, T trail, Player player) {
+    public <T extends Trail<T>> WbsMenu getMenu(MenuPage lastPage, T trail, Player player) {
         return new MaterialDataMenu<>(WbsTrails.getInstance(), lastPage, this, trail, player);
     }
 
@@ -86,4 +87,21 @@ public abstract class MaterialDataProducer<D, P extends DataProducer<D, P>> exte
     public void setMaterial(Material material) {
         this.material = material;
     }
+
+    @Override
+    public Collection<String> getValueDisplays() {
+        return Collections.singleton("&6Material: &b" + WbsEnums.toPrettyString(material));
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    @Override
+    public final @NotNull D produce() {
+        return produce(material);
+    }
+
+    @NotNull
+    public abstract D produce(@NotNull Material material);
 }

@@ -11,6 +11,8 @@ public final class MainMenu extends WbsMenu {
 
         setSlot(1, 2, TrailMenuUtils.getBuildLink());
 
+        setSlot(1, 4, TrailMenuUtils.getCurrentTrailsLink());
+
         setSlot(1, 6, TrailMenuUtils.getPresetsLink());
     }
 }

@@ -21,8 +21,8 @@ public class ItemStackProducer extends MaterialDataProducer<ItemStack, ItemStack
     }
 
     @Override
-    public @NotNull ItemStack produce() {
-        return new ItemStackProvider(Collections.singletonList(material));
+    public @NotNull ItemStack produce(@NotNull Material material) {
+        return new ItemStack(material);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package wbs.trails;
+package wbs.trails.listeners;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -8,6 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import wbs.trails.TrailsController;
+import wbs.trails.TrailsSettings;
+import wbs.trails.WbsTrails;
 import wbs.utils.util.plugin.WbsMessenger;
 
 @SuppressWarnings("unused")

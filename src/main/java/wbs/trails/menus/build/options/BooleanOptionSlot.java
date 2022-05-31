@@ -27,17 +27,19 @@ public class BooleanOptionSlot<T> extends ConfigOptionSlot<T, Boolean> {
     }
 
     private void onClick(WbsMenu menu, InventoryClickEvent event) {
-        current = !current;
+        setCurrent(!getCurrent());
+        menu.update(event.getSlot());
+    }
 
-        item.setType(materialFor(current));
+    public void updateItem() {
+        item.setType(materialFor(getCurrent()));
 
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        meta.setDisplayName(nameFor(option.getName(), current));
+        meta.setDisplayName(nameFor(option.getName(), getCurrent()));
 
         item.setItemMeta(meta);
-        menu.update(event.getSlot());
     }
 
     private static ItemStack getItem(BooleanOption<?> option, boolean enabled) {

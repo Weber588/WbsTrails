@@ -82,8 +82,12 @@ public final class PresetManager {
 
     public static Collection<PresetTrail<?>> getAllowed(Player player) {
         return getPresets().stream()
-                .filter(preset -> player.hasPermission(preset.getPermission()))
+                .filter(preset -> preset.hasPermission(player))
                 .sorted(Comparator.comparing(PresetTrail::getName))
                 .collect(Collectors.toList());
+    }
+
+    public static String formatId(String name) {
+        return name.toLowerCase().replace(" ", "_");
     }
 }

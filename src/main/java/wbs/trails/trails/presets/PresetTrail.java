@@ -1,5 +1,6 @@
 package wbs.trails.trails.presets;
 
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -77,8 +78,12 @@ public class PresetTrail<T extends Trail<T>> {
     }
 
     public PresetTrail(T trail, @NotNull String id) {
-        this.id = id;
-        name = id;
+        this(trail, id, id);
+    }
+
+    public PresetTrail(T trail, @NotNull String id, @NotNull String name) {
+        this.id = PresetManager.formatId(id);
+        this.name = name;
         particle = trail.getParticle();
         data = trail.getData();
         registration = trail.getRegistration();
@@ -103,6 +108,7 @@ public class PresetTrail<T extends Trail<T>> {
 
     public void writeToConfig(ConfigurationSection section) {
         section.set("type", registration.getName());
+        section.set("name", name);
         section.set("particle", particle.name());
         section.set("permission", "wbstrails.preset." + id);
         section.set("description", description);
@@ -139,11 +145,21 @@ public class PresetTrail<T extends Trail<T>> {
         return name;
     }
 
+    @NotNull
+    public String getId() {
+        return id;
+    }
+
     public void setName(@NotNull String name) {
         this.name = name;
     }
 
     public boolean hasPermission(Player player) {
         return player.hasPermission(getPermission()) && player.hasPermission(registration.getPermission());
+    }
+
+    @NotNull
+    public RegisteredTrail<T> getRegistration() {
+        return registration;
     }
 }

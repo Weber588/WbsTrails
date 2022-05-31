@@ -1,5 +1,6 @@
 package wbs.trails.trails.data;
 
+import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -7,17 +8,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import wbs.trails.WbsTrails;
-import wbs.trails.menus.build.BuildMenu;
+import wbs.trails.menus.build.MenuPage;
 import wbs.trails.menus.build.data.DustDataMenu;
 import wbs.trails.trails.Trail;
 import wbs.trails.trails.options.ConfigOption;
 import wbs.trails.trails.options.DoubleOption;
-import wbs.trails.trails.options.IntegerOption;
+import wbs.utils.util.WbsColours;
 import wbs.utils.util.menus.WbsMenu;
 import wbs.utils.util.particles.data.DustOptionsProvider;
 import wbs.utils.util.providers.NumProvider;
 import wbs.utils.util.providers.VectorProvider;
 import wbs.utils.util.providers.generator.num.CycleGenerator;
+import wbs.utils.util.string.WbsStrings;
 
 import java.util.*;
 
@@ -60,7 +62,7 @@ public class DustDataProducer extends DataProducer<Particle.DustOptions, DustDat
         Particle.DustOptions data;
 
         if (rainbow) {
-            CycleGenerator period = new CycleGenerator(0, 1, 100 / rainbowSpeed, 0);
+            CycleGenerator period = new CycleGenerator(0, 1, 100 / (rainbowSpeed * WbsTrails.getInstance().settings.getRefreshRate()), 0);
             NumProvider hue = new NumProvider(period);
             VectorProvider HSBProvider = new VectorProvider(hue, new NumProvider(saturation), new NumProvider(brightness));
             data = new DustOptionsProvider(HSBProvider, size, DustOptionsProvider.ColourType.HSB);
@@ -153,35 +155,52 @@ public class DustDataProducer extends DataProducer<Particle.DustOptions, DustDat
     }
 
     @Override
-    public <T extends Trail<T>> WbsMenu getMenu(BuildMenu lastPage, T trail, Player player) {
+    public <T extends Trail<T>> WbsMenu getMenu(MenuPage lastPage, T trail, Player player) {
         return new DustDataMenu<>(WbsTrails.getInstance(), lastPage, this, trail, player);
     }
 
-    public IntegerOption<DustDataProducer> getRedOption() {
-        return new IntegerOption<>("red",
-                255,
-                0,
-                255,
-                (producer, integer) -> producer.red = integer,
-                producer -> producer.red);
+    @Override
+    public Collection<String> getValueDisplays() {
+        List<String> lines = new LinkedList<>();
+        if (rainbow) {
+            Color start = WbsColours.fromHSB(0, 1 * saturation, 1 * brightness);
+            Color end = WbsColours.fromHSB(0.957, 1 * saturation, 0.502 * brightness);
+            String rainbowString = WbsStrings.addColourGradient("Rainbow", start, end);
+            lines.add(rainbowString + "&7: &bTrue");
+            lines.add("&6Saturation&7: &b" + saturation);
+            lines.add("&6Brightness&7: &b" + brightness);
+        } else {
+            String preview = "&7(" + WbsColours.toChatColour(Color.fromRGB(red, green, blue)) + "Preview&7)";
+            lines.add("&6Colour&7: &c" + red + "&7, &a" + green + "&7, &b" + blue + " " + preview);
+        }
+
+        lines.add("&6Size&7: " + size);
+
+        return lines;
     }
 
-    public IntegerOption<DustDataProducer> getGreenOption() {
-        return new IntegerOption<>("green",
-                0,
-                0,
-                255,
-                (producer, integer) -> producer.green = integer,
-                producer -> producer.green);
+    public int getRed() {
+        return red;
     }
 
-    public IntegerOption<DustDataProducer> getBlueOption() {
-        return new IntegerOption<>("blue",
-                0,
-                0,
-                255,
-                (producer, integer) -> producer.blue = integer,
-                producer -> producer.blue);
+    public void setRed(int red) {
+        this.red = red;
+    }
+
+    public int getGreen() {
+        return green;
+    }
+
+    public void setGreen(int green) {
+        this.green = green;
+    }
+
+    public int getBlue() {
+        return blue;
+    }
+
+    public void setBlue(int blue) {
+        this.blue = blue;
     }
 
     public DoubleOption<DustDataProducer> getRainbowSpeedOption() {
@@ -200,6 +219,12 @@ public class DustDataProducer extends DataProducer<Particle.DustOptions, DustDat
         return new DoubleOption<>("brightness", 1, 0, 1,
                 (producer, newValue) -> producer.brightness = newValue,
                 producer -> producer.brightness);
+    }
+
+    public DoubleOption<DustDataProducer> getSizeOption() {
+        return new DoubleOption<>("size", 1, 0.1, 2,
+                (producer, newValue) -> producer.size = newValue.floatValue(),
+                producer -> (double) producer.size);
     }
 
     @Override

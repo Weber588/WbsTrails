@@ -3,10 +3,11 @@ package wbs.trails.trails;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 
+import org.jetbrains.annotations.Nullable;
 import wbs.trails.TrailsSettings;
 import wbs.trails.WbsTrails;
 import wbs.trails.trails.data.DataProducer;
-import wbs.trails.trails.options.OptionPair;
+import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;
 import wbs.utils.util.particles.WbsParticleEffect;
 import wbs.utils.util.plugin.WbsMessenger;
@@ -26,6 +27,7 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 	private final RegisteredTrail<T> registration;
 	protected Player player;
 	protected Particle particle;
+	@Nullable
 	protected DataProducer<?, ?> data;
 
 	private boolean active = false;
@@ -46,6 +48,10 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 
 		active = true;
 
+		build();
+	}
+
+	public void build() {
 		if (data != null) {
 			Object options = data.produce();
 
@@ -55,6 +61,8 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 			}
 
 			getEffect().setOptions(options);
+		} else {
+			getEffect().setOptions(null);
 		}
 
 		getEffect().build();
@@ -92,14 +100,15 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 		return registration;
 	}
 
-	public PresetTrail<T> toPreset(String presetId) {
-		return new PresetTrail<>(getThis(), presetId);
+	public PresetTrail<T> toPreset(String presetName) {
+		return new PresetTrail<>(getThis(), PresetManager.formatId(presetName), presetName);
 	}
 
 	public Particle getParticle() {
 		return particle;
 	}
 
+	@Nullable
 	public DataProducer<?, ?> getData() {
 		return data;
 	}

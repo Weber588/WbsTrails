@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.trails.menus.build.options.ConfigOptionSlot;
+import wbs.utils.util.menus.PageSlot;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -85,5 +86,5 @@ public abstract class ConfigOption<T, V> {
         return defaultValue;
     }
 
-    public abstract ConfigOptionSlot<T, V> newSlot();
+    public abstract PageSlot<ConfigOption<T, V>> newSlot();
 }

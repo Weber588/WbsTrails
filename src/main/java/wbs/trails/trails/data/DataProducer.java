@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wbs.trails.menus.build.BuildMenu;
+import wbs.trails.menus.build.MenuPage;
 import wbs.trails.trails.Trail;
 import wbs.trails.trails.options.ConfigOption;
 import wbs.utils.util.menus.WbsMenu;
@@ -46,5 +46,7 @@ public abstract class DataProducer<T, P extends DataProducer<T, P>> {
 
     public abstract Class<T> getDataClass();
 
-    public abstract <T extends Trail<T>> WbsMenu getMenu(BuildMenu lastPage, T trail, Player player);
+    public abstract <Tr extends Trail<Tr>> WbsMenu getMenu(MenuPage lastPage, Tr trail, Player player);
+
+    public abstract Collection<String> getValueDisplays();
 }

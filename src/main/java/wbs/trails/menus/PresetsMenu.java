@@ -7,6 +7,7 @@ import wbs.trails.trails.Trail;
 import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;
 import wbs.utils.util.menus.MenuSlot;
+import wbs.utils.util.menus.PageSlot;
 import wbs.utils.util.menus.PagedMenu;
 import wbs.utils.util.plugin.WbsPlugin;
 import wbs.utils.util.string.WbsStrings;
@@ -36,10 +37,12 @@ public class PresetsMenu extends PagedMenu<PresetTrail<?>> {
         this.player = player;
 
         setUnregisterOnClose(true);
+        setOutline(TrailMenuUtils.getOutlineSlot(), false);
+        setSlot(0, 0, TrailMenuUtils.getMainMenuLink());
     }
 
     @Override
-    protected MenuSlot getSlot(PresetTrail<?> presetTrail) {
+    protected PageSlot<PresetTrail<?>> getSlot(PresetTrail<?> presetTrail) {
         List<String> lore = new LinkedList<>();
 
         String description = presetTrail.getDescription();
@@ -75,7 +78,12 @@ public class PresetsMenu extends PagedMenu<PresetTrail<?>> {
         name = WbsStrings.capitalizeAll(name);
         name = plugin.dynamicColourise("&b" + name);
 
-        MenuSlot slot = new MenuSlot(plugin, Material.BOOK, name, true, plugin.colouriseAll(lore));
+        PageSlot<PresetTrail<?>> slot = new PageSlot<>(plugin,
+                presetTrail,
+                presetTrail.getRegistration().getMaterial(),
+                name,
+                true,
+                plugin.colouriseAll(lore));
 
         slot.setClickAction(event -> {
             Player player = (Player) event.getWhoClicked();

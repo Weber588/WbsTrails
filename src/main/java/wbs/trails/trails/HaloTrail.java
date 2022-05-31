@@ -10,7 +10,7 @@ import wbs.utils.util.particles.RingParticleEffect;
 
 public class HaloTrail extends Trail<HaloTrail> {
 	private static final double DEFAULT_RADIUS = 0.4;
-	private static final double DEFAULT_HEIGHT = 0.1;
+	private static final double DEFAULT_HEIGHT = 0.2;
 
 	@SuppressWarnings("unused") // Invoked reflectively
 	public static void registerOptions(RegisteredTrail<HaloTrail> registration) {
@@ -18,7 +18,7 @@ public class HaloTrail extends Trail<HaloTrail> {
 				new DoubleOption<>("radius", DEFAULT_RADIUS, 0.2, 0.8, HaloTrail::setRadius, HaloTrail::getRadius)
 		);
 		registration.registerOption(
-				new DoubleOption<>("height", DEFAULT_HEIGHT, DEFAULT_HEIGHT, 0.6, HaloTrail::setHeight, HaloTrail::getHeight)
+				new DoubleOption<>("height", DEFAULT_HEIGHT, 0.1, 0.5, HaloTrail::setHeight, HaloTrail::getHeight)
 		);
 	}
 
@@ -36,8 +36,9 @@ public class HaloTrail extends Trail<HaloTrail> {
 	@Override
 	public void tick() {
 		Vector about = WbsEntityUtil.getLocalUp(player);
-		about = WbsMath.scaleVector(about, 0.7 + height); // 0.7 is top of head
-		
+		about = WbsMath.scaleVector(about, 0.5 + height); // 0.7 is top of head
+
+		effect.setAmount((int) (30 * radius));
 		effect.setAbout(about);
 		effect.build();
 		

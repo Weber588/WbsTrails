@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.trails.WbsTrails;
 import wbs.trails.command.preset.PresetCommandNode;
+import wbs.trails.menus.CurrentTrailsMenu;
 import wbs.trails.menus.TrailMenuUtils;
 import wbs.utils.util.commands.WbsCommand;
 
@@ -44,7 +45,11 @@ public class TrailsCommand extends WbsCommand {
 
         Player player = (Player) sender;
 
-        TrailMenuUtils.getMainMenu().showTo(player);
+        if (label.equalsIgnoreCase("trails")) {
+            new CurrentTrailsMenu(plugin, player).showTo(player);
+        } else {
+            TrailMenuUtils.getMainMenu().showTo(player);
+        }
         return true;
     }
 }

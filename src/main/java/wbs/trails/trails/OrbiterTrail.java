@@ -8,7 +8,7 @@ import wbs.trails.trails.options.IntegerOption;
 import wbs.utils.util.particles.RingParticleEffect;
 
 public class OrbiterTrail extends Trail<OrbiterTrail> {
-	private static final double DEFAULT_RADIUS = 0.6;
+	private static final double DEFAULT_RADIUS = 1;
 	private static final double DEFAULT_HEIGHT = 1;
 	private static final double DEFAULT_SPEED = 1;
 	private static final int DEFAULT_AMOUNT = 5;

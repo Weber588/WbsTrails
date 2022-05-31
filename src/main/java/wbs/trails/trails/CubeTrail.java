@@ -62,7 +62,7 @@ public class CubeTrail extends Trail<CubeTrail> {
 		}
 		
 		if (bounce) {
-			height = Math.sin(age * speed * 0.05) * (2 - size) / 2 + 0.1; // 0.1 is offset because particles are often not just a point
+			height = Math.sin(age * settings.getRefreshRate() * speed * 0.05) * (2 - size) / 2 + 0.1; // 0.1 is offset because particles are often not just a point
 		}
 		
 		effect.buildAndPlay(particle, WbsEntityUtil.getMiddleLocation(player).add(0, height, 0));

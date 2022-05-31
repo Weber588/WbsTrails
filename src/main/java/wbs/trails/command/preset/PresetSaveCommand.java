@@ -9,6 +9,7 @@ import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;
+import wbs.utils.util.string.WbsStrings;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,17 +31,9 @@ public class PresetSaveCommand extends WbsSubcommand {
             return true;
         }
 
-        if (args.length > start + 1) {
-            sendMessage("Preset id must contain no spaces. " +
-                    "To assign a dynamic name, you can change it after creation with " +
-                    "&h" + getAlternativeCommand("rename", label, args, start) +
-                    "&r.", sender);
-            return true;
-        }
-
         Player player = (Player) sender;
 
-        String presetId = args[start];
+        String presetName = WbsStrings.combineLast(args, start, " ");
 
         List<Trail<?>> activeTrails = TrailsController.getInstance().getActiveTrails(player);
         if (activeTrails.isEmpty()) {
@@ -54,10 +47,12 @@ public class PresetSaveCommand extends WbsSubcommand {
         }
 
         Trail<?> trail = activeTrails.get(0);
-        PresetTrail<?> preset = trail.toPreset(presetId);
-        PresetManager.setPreset(presetId, preset);
+        PresetTrail<?> preset = trail.toPreset(presetName);
+        PresetManager.setPreset(preset.getId(), preset);
 
-        sendMessage("Preset created! You can load it with &h" + getAlternativeCommand("load", label, args, start) + " " + presetId + "&r.", sender);
+        sendMessage("Preset created! You can load it with &h"
+                + getAlternativeCommand("load", label, args, start) + " "
+                + preset.getId() + "&r.", sender);
 
         return true;
     }
