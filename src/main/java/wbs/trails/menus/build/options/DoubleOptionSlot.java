@@ -74,6 +74,8 @@ public class DoubleOptionSlot<T> extends ConfigOptionSlot<T, Double> {
         updateLore(meta, current);
 
         item.setItemMeta(meta);
+
+        item.setAmount(Math.max(1, getCurrent().intValue()));
     }
 
     private static ItemStack getItem(DoubleOption<?> option, double value) {

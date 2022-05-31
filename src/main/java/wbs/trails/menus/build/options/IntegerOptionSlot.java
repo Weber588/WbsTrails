@@ -65,7 +65,7 @@ public class IntegerOptionSlot<T> extends ConfigOptionSlot<T, Integer> {
 
         item.setItemMeta(meta);
 
-        item.setAmount(getCurrent());
+        item.setAmount(Math.max(1, getCurrent()));
     }
 
     private static ItemStack getItem(IntegerOption<?> option, int value) {
