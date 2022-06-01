@@ -1,6 +1,5 @@
 package wbs.trails.trails.presets;
 
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -161,5 +160,18 @@ public class PresetTrail<T extends Trail<T>> {
     @NotNull
     public RegisteredTrail<T> getRegistration() {
         return registration;
+    }
+
+    public DataProducer<?, ?> getData() {
+        return data;
+    }
+
+    public List<OptionPair<T, ?>> getOptions() {
+        return new LinkedList<>(filledOptions);
+    }
+
+    @NotNull
+    public Particle getParticle() {
+        return particle;
     }
 }

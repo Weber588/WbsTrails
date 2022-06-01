@@ -1,6 +1,7 @@
 package wbs.trails.trails.options;
 
 import org.bukkit.configuration.ConfigurationSection;
+import wbs.trails.trails.presets.PresetTrail;
 
 public class OptionPair<T, V> {
     private final ConfigOption<T, V> option;
@@ -33,5 +34,9 @@ public class OptionPair<T, V> {
 
     public V getValue() {
         return value;
+    }
+
+    public ConfigOption<T, V> getOption() {
+        return option;
     }
 }
