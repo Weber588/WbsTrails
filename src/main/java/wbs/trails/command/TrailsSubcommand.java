@@ -144,7 +144,7 @@ public class TrailsSubcommand extends WbsSubcommand {
 
         if (option == null) {
             sendMessage("&h" + optionName + "&w is not a valid option for this trail."
-                    + " Please choose from the following: &h" + String.join(", ", registration.getOptionNames()) + " &h(" + optionName + " " + valueOption + ")", player);
+                    + " Please choose from the following: &h" + String.join(", ", registration.getUsableOptionNames(player)) + " &h(" + optionName + " " + valueOption + ")", player);
             return false;
         }
 
@@ -161,6 +161,12 @@ public class TrailsSubcommand extends WbsSubcommand {
     protected List<String> getTrailTabCompletions(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         List<String> choices = new LinkedList<>();
 
+        if (!(sender instanceof Player)) {
+            return choices;
+        }
+
+        Player player = (Player) sender;
+
         Particle particle;
 
         switch (args.length) {
@@ -172,10 +178,8 @@ public class TrailsSubcommand extends WbsSubcommand {
                 }
                 break;
             case 3:
-                if (sender instanceof Player) {
-                    for (Particle allowedParticle : settings.getAllowedParticlesFor((Player) sender)) {
-                        choices.add(allowedParticle.name().toLowerCase());
-                    }
+                for (Particle allowedParticle : settings.getAllowedParticlesFor((Player) sender)) {
+                    choices.add(allowedParticle.name().toLowerCase());
                 }
                 break;
         }
@@ -224,7 +228,7 @@ public class TrailsSubcommand extends WbsSubcommand {
             }
 
             if ((args.length - optionsStart) % 2 == 1) {
-                List<String> editable = new LinkedList<>(registration.getOptionNames());
+                List<String> editable = new LinkedList<>(registration.getUsableOptionNames(player));
 
                 if (dataOptions != null) {
                     dataOptions.forEach(option -> editable.add(option.getName()));

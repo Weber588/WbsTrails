@@ -29,4 +29,11 @@ public abstract class NumericOption<T, V extends Number> extends ConfigOption<T,
     public V getMax() {
         return max;
     }
+
+    @Override
+    public boolean isEditable() {
+        if (getMax().equals(getMin())) return false;
+
+        return super.isEditable();
+    }
 }

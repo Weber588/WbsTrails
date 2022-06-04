@@ -18,7 +18,6 @@ public final class TrailManager {
         registerTrail("electric", ElectricTrail.class, ElectricTrail::new);
         registerTrail("halo", HaloTrail.class, HaloTrail::new);
         registerTrail("helix", HelixTrail.class, HelixTrail::new);
-        registerTrail("horns", HornsTrail.class, HornsTrail::new);
         registerTrail("orbiter", OrbiterTrail.class, OrbiterTrail::new);
         registerTrail("standard", StandardTrail.class, StandardTrail::new);
 
@@ -33,6 +32,22 @@ public final class TrailManager {
         RegisteredTrail<T> trail = new RegisteredTrail<>(formattedId, trailClass, producer);
 
         registeredTrails.put(formattedId, trail);
+    }
+
+    public static void registerCustomTrail(CustomRegisteredTrail registration) {
+        registeredTrails.put(strip(registration.getName()), registration);
+    }
+
+    public static void unregisterCustomTrails() {
+        Set<String> toRemove = new HashSet<>();
+
+        registeredTrails.forEach((key, value) -> {
+            if (value instanceof CustomRegisteredTrail) {
+                toRemove.add(key);
+            }
+        });
+
+        toRemove.forEach(registeredTrails::remove);
     }
 
     private static String strip(String id) {

@@ -127,9 +127,6 @@ trails-options:
       default: 4
       min: 1
       max: 15
-  HORNS:
-    description: Particle horns!
-    material: WITHER_SKELETON_SKULL
   ORBITER:
     description: A group of particles that circles around you
     material: STRING

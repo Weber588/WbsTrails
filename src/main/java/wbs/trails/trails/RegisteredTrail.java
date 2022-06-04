@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 public class RegisteredTrail<T extends Trail<T>> {
     private static final String REGISTER_OPTIONS_METHOD = "registerOptions";
@@ -25,9 +26,10 @@ public class RegisteredTrail<T extends Trail<T>> {
     @NotNull
     private final BiFunction<RegisteredTrail<T>, Player, T> producer;
 
-    private String description;
     @NotNull
-    private Material material;
+    protected String description = "";
+    @NotNull
+    protected Material material;
 
     private final Map<String, ConfigOption<T, ?>> options = new HashMap<>();
 
@@ -55,7 +57,13 @@ public class RegisteredTrail<T extends Trail<T>> {
     }
 
     public T buildTrail(Player player) {
-        return producer.apply(this, player);
+        T trail = producer.apply(this, player);
+
+        for (ConfigOption<T, ?> option : options.values()) {
+            option.applyDefault(trail);
+        }
+
+        return trail;
     }
 
     @NotNull
@@ -71,6 +79,26 @@ public class RegisteredTrail<T extends Trail<T>> {
         return options.keySet();
     }
 
+    public Collection<ConfigOption<T, ?>> getOptions() {
+        return new LinkedList<>(options.values());
+    }
+
+    public Collection<String> getUsableOptionNames(Player player) {
+        return options.values().stream()
+                .filter(ConfigOption::isEditable)
+                .filter(option -> player.hasPermission(getPermission(option)))
+                .map(ConfigOption::getName)
+                .collect(Collectors.toList());
+    }
+
+    public Collection<ConfigOption<T, ?>> getUsableOptions(Player player) {
+        return options.values().stream()
+                .filter(ConfigOption::isEditable)
+                .filter(option -> player.hasPermission(getPermission(option)))
+                .collect(Collectors.toList());
+    }
+
+    @NotNull
     public String getDescription() {
         return description;
     }
@@ -88,16 +116,19 @@ public class RegisteredTrail<T extends Trail<T>> {
             }
         }
 
-        description = section.getString("description");
+        String checkDescription = section.getString("description");
+        if (checkDescription != null) {
+            description = checkDescription;
+        }
         material = WbsEnums.materialFromString(section.getString("material"), material);
-    }
-
-    public Collection<ConfigOption<T, ?>> getOptions() {
-        return new LinkedList<>(options.values());
     }
 
     public String getPermission() {
         return "wbstrails.type." + getName().toLowerCase();
+    }
+
+    public String getPermission(ConfigOption<T, ?> option) {
+        return getPermission() + "." + option.getName();
     }
 
     @NotNull

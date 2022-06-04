@@ -25,7 +25,7 @@ public class TrailOptionsMenu<T extends Trail<T>> extends PagedMenu<ConfigOption
 
     public TrailOptionsMenu(WbsPlugin plugin, MenuPage lastPage, T trail, Player player, int page) {
         super(plugin,
-                trail.getRegistration().getOptions(),
+                trail.getRegistration().getUsableOptions(player),
                 "&3&lCustomize your trail!",
                 "trail_option:" + player.getUniqueId(),
                 1, // rowStart

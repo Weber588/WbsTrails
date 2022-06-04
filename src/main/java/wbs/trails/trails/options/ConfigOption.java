@@ -3,7 +3,6 @@ package wbs.trails.trails.options;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wbs.trails.menus.build.options.ConfigOptionSlot;
 import wbs.utils.util.menus.PageSlot;
 
 import java.util.List;
@@ -55,6 +54,10 @@ public abstract class ConfigOption<T, V> {
         setter.accept(applyTo, value);
     }
 
+    public void applyDefault(T applyTo) {
+        setter.accept(applyTo, defaultValue);
+    }
+
     public final OptionPair<T, V> fromT(T from) {
         V value = getter.apply(from);
         return new OptionPair<>(this, value);
@@ -87,4 +90,8 @@ public abstract class ConfigOption<T, V> {
     }
 
     public abstract PageSlot<ConfigOption<T, V>> newSlot();
+
+    public boolean isEditable() {
+        return true;
+    }
 }
