@@ -1,0 +1,87 @@
+# Custom trails define a set of points in 3d space, which may move with the player in some
+# pre-defined ways.
+
+horns:
+  # The description to show in the trail menu
+  description: 'Particle horns!'
+
+  # The item that appears in menus to represent this trail
+  material: WITHER_SKELETON_SKULL
+
+  # How should the set of points move relative to the player?
+  #   absolute:
+  #     Default. Do not move the points relative to the player (i.e. use world space).
+  #     Centers on the floor under the player.
+  #   body:
+  #     Move the points relative to the player's body, rotating about the Y axis
+  #     when they look left or right, but not when they look up or down.
+  #     Centers on the middle of the player (including sneak height change)
+  #   head:
+  #     Move the points relative to the player's head, including looking up and down.
+  #     Centers on the middle of the player's head.
+  track: head
+
+  # The list of points at which to generate particles
+  points:
+    # x, y, z = left, up, forward
+
+    # left horn (and use mirror-x: true to create right horn)
+    - '0.2, 0.2, 0.3'
+    - '0.25, 0.25, 0.33'
+    - '0.28, 0.3, 0.36'
+    - '0.3, 0.35, 0.34'
+    - '0.29, 0.4, 0.33'
+
+  flip:
+    x: false
+    y: false
+    z: false
+
+  mirror:
+    x: true
+    y: false
+    z: false
+
+  rotate:
+    x: 0
+    y: 0
+    z: 0
+
+  offset:
+    x: 0
+    y: 0
+    z: 0
+
+  # Simple movement of the trail can be affected by options defined here.
+  # (Not used by Horns trail; you can leave out options to disable them, or set
+  # them to be constant values by setting max and min equal to each other. Constant
+  # values cannot be modified in game.)
+  options:
+    # Rotate about the local Y axis. If track (above) is set to 'absolute' or 'body', it'll
+    # rotate about the world's Y axis. If set to 'head', then rotation will occur around the
+    # player's head
+    rotate:
+      # You can set a user-friendly name here that players will see in game.
+      # If omitted, the name of the option will be used (in this case, "rotate")
+      name: 'speed'
+      default: 0
+      min: 0 # Since min equals max, this option won't appear in game.
+      max: 0
+
+    # Move the points up and down over time (where up is relative to the 'track' value)
+    bounce:
+      # How far up & down should the points move?
+      height:
+        name: 'bounceHeight'
+        default: 0
+        min: 0
+        max: 0
+      # How fast should the points move?
+      # (in bounces per second - if speed is 2, then points will move up and down twice per
+      # second. If speed is 0.2, the points will move up and down once every 5 seconds)
+      speed:
+        # Names must be unique across all options for this trail to be usable by command.
+        name: 'bounceSpeed'
+        default: 0
+        min: 0
+        max: 0

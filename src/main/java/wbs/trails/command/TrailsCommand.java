@@ -32,6 +32,7 @@ public class TrailsCommand extends WbsCommand {
         // Admin commands
         addSubcommand(new ErrorsSubcommand(plugin), permission + ".admin.reload");
         addSubcommand(new ReloadSubcommand(plugin), permission + ".admin.reload");
+        addSubcommand(new ImageCommand(plugin), permission + ".admin.image");
 
     }
 
