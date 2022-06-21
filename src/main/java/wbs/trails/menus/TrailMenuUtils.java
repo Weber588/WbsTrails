@@ -102,8 +102,14 @@ public final class TrailMenuUtils {
                 (event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    plugin.runSync(() ->
-                            new ChooseTrailMenu(plugin, player).showTo(player));
+                    int maxTrails = TrailsController.getInstance().getMaxTrails(player);
+
+                    if (maxTrails == 1 || TrailsController.getInstance().getActiveTrails(player).size() < maxTrails) {
+                        plugin.runSync(() ->
+                                new ChooseTrailMenu(plugin, player).showTo(player));
+                    } else {
+                        plugin.sendMessage("&cYou can't have any more trails!", player);
+                    }
                 }
         );
 
@@ -182,7 +188,7 @@ public final class TrailMenuUtils {
         if (showOptions) {
             for (ConfigOption<T, ?> option : trail.getRegistration().getOptions()) {
                 //noinspection unchecked
-                lore.add("&6" + WbsStrings.capitalize(option.getName()) + "&7: &b" + option.fromT((T) trail).getValue());
+                lore.add("&6" + option.getFormattedName() + "&7: &b" + option.fromT((T) trail).getValue());
             }
         }
 

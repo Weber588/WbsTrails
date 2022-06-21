@@ -44,20 +44,7 @@ public class TrailOptionsMenu<T extends Trail<T>> extends PagedMenu<ConfigOption
 
         MenuSlot doneSlot = new MenuSlot(plugin, Material.LIME_DYE, "&a&lClick to finish!");
 
-        doneSlot.setClickAction(event -> {
-            updateTrail();
-
-            if (!trail.isActive()) {
-                TrailsController controller = TrailsController.getInstance();
-                if (controller.tryAddTrail(player, trail)) {
-                    trail.enable();
-                    plugin.sendMessage("Trail enabled!", player);
-                }
-            }
-
-            player.closeInventory();
-            unregister();
-        });
+        doneSlot.setClickAction(event -> finish());
 
         for (MenuSlot slot : pageSlots) {
             //noinspection unchecked
@@ -70,13 +57,32 @@ public class TrailOptionsMenu<T extends Trail<T>> extends PagedMenu<ConfigOption
         setSlot(rows - 1, 4, TrailMenuUtils.getTrailPreview(trail, false));
     }
 
+    private void finish() {
+        updateTrail();
+
+        if (!trail.isActive()) {
+            TrailsController controller = TrailsController.getInstance();
+            if (controller.tryAddTrail(player, trail)) {
+                trail.enable();
+                plugin.sendMessage("Trail enabled!", player);
+            }
+        }
+
+        player.closeInventory();
+        unregister();
+    }
+
     @Override
     public void showTo(Player player) {
-        super.showTo(player);
-        // Update trail whenever this is shown, rather than when it's created, as the player may come to this
-        // via the back button
-        setSlot(rows - 1, 4, TrailMenuUtils.getTrailPreview(trail, false));
-        update(rows - 1, 4);
+        if (trail.getRegistration().getUsableOptions(player).isEmpty()) {
+            finish();
+        } else {
+            super.showTo(player);
+            // Update trail whenever this is shown, rather than when it's created, as the player may come to this
+            // via the back button
+            setSlot(rows - 1, 4, TrailMenuUtils.getTrailPreview(trail, false));
+            update(rows - 1, 4);
+        }
     }
 
     private void updateTrail() {

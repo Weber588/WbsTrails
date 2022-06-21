@@ -2,6 +2,7 @@ package wbs.trails.command;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import wbs.trails.TrailsController;
 import wbs.trails.WbsTrails;
 import wbs.trails.menus.build.ChooseTrailMenu;
 import wbs.utils.util.menus.WbsMenu;

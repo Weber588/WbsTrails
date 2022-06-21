@@ -12,21 +12,15 @@ public abstract class MenuSubcommand extends WbsSubcommand {
         super(plugin, label);
     }
 
-    private static final boolean WORK_IN_PROGRESS = false;
-
     @Override
     protected boolean onCommand(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        if (WORK_IN_PROGRESS) {
-            sendMessage("Work in progress.", sender);
-        } else {
-            if (!(sender instanceof Player)) {
-                sendMessage("This command is only usable by players.", sender);
-                return true;
-            }
-            Player player = (Player) sender;
-
-            getMenu(player).showTo(player);
+        if (!(sender instanceof Player)) {
+            sendMessage("This command is only usable by players.", sender);
+            return true;
         }
+        Player player = (Player) sender;
+
+        getMenu(player).showTo(player);
 
         return true;
     }

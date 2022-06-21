@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wbs.utils.util.menus.PageSlot;
+import wbs.utils.util.string.WbsStrings;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -25,6 +26,10 @@ public abstract class ConfigOption<T, V> {
 
     public String getName() {
         return name;
+    }
+
+    public String getFormattedName() {
+        return WbsStrings.capitalizeAll(name.replace('_', ' '));
     }
 
     @NotNull

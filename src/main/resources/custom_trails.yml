@@ -72,7 +72,7 @@ horns:
     bounce:
       # How far up & down should the points move?
       height:
-        name: 'bounceHeight'
+        name: 'bounce_height'
         default: 0
         min: 0
         max: 0
@@ -81,7 +81,7 @@ horns:
       # second. If speed is 0.2, the points will move up and down once every 5 seconds)
       speed:
         # Names must be unique across all options for this trail to be usable by command.
-        name: 'bounceSpeed'
+        name: 'bounce_speed'
         default: 0
         min: 0
         max: 0

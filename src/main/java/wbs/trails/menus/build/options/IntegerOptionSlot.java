@@ -54,6 +54,7 @@ public class IntegerOptionSlot<T> extends ConfigOptionSlot<T, Integer> {
                 break;
         }
 
+        current = WbsMath.clamp(option.getMin(), option.getMax(), current);
         setCurrent(current);
     }
 
@@ -78,8 +79,7 @@ public class IntegerOptionSlot<T> extends ConfigOptionSlot<T, Integer> {
             assert meta != null;
         }
 
-        String name = option.getName().replace("_", " ");
-        name = WbsStrings.capitalizeAll(name);
+        String name = option.getFormattedName();
         name = WbsTrails.getInstance().dynamicColourise("&3" + name);
 
         meta.setDisplayName(name);

@@ -90,7 +90,7 @@ public class PresetsMenu extends PagedMenu<PresetTrail<?>> {
             }
 
             for (OptionPair<?, ?> pair : presetTrail.getOptions()) {
-                lore.add("&6" + WbsStrings.capitalize(pair.getOption().getName()) + "&7: &b" + pair.getValue());
+                lore.add("&6" + pair.getOption().getFormattedName() + "&7: &b" + pair.getValue());
             }
         }
 

@@ -204,7 +204,7 @@ public class DustDataProducer extends DataProducer<Particle.DustOptions, DustDat
     }
 
     public DoubleOption<DustDataProducer> getRainbowSpeedOption() {
-        return new DoubleOption<>("rainbowSpeed", 1, 0.2, 10,
+        return new DoubleOption<>("rainbow_speed", 1, 0.2, 10,
                 (producer, newValue) -> producer.rainbowSpeed = newValue,
                 producer -> producer.rainbowSpeed);
     }

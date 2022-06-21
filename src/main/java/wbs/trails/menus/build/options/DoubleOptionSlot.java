@@ -88,8 +88,7 @@ public class DoubleOptionSlot<T> extends ConfigOptionSlot<T, Double> {
             assert meta != null;
         }
 
-        String name = option.getName().replace("_", " ");
-        name = WbsStrings.capitalizeAll(name);
+        String name = option.getFormattedName();
         name = WbsTrails.getInstance().dynamicColourise("&3" + name);
 
         meta.setDisplayName(name);

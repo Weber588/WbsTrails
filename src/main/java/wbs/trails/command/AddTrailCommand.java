@@ -25,12 +25,7 @@ public class AddTrailCommand extends TrailsSubcommand {
 
         TrailsController controller = TrailsController.getInstance();
         Trail<?> trail = buildTrail(player, args);
-        if (controller.tryAddTrail(player, trail)) {
-            trail.enable();
-
-            Collection<Trail<?>> trails = controller.getTrails(player);
-            sendMessage("Trail added. You have &h" + trails.size() + "&r trails active.", player);
-        }
+        controller.tryAddTrail(player, trail);
 
         return true;
     }

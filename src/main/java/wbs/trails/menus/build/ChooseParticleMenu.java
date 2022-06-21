@@ -128,10 +128,14 @@ public class ChooseParticleMenu<T extends Trail<T>> extends PagedMenu<Particle> 
         DataProducer<?, ?> producer = DataManager.getProducer(dataType);
 
         if (producer == null) {
-            trail.setData(null);
-            trail.build();
-            plugin.runSync(() ->
-                    new TrailOptionsMenu<>(plugin, this, trail, player).showTo(player));
+            if (dataType != Void.class) {
+                plugin.sendMessage("&wA data type was missing &h(" + dataType.getCanonicalName() + ")&w. You can't use it right now.", player);
+            } else {
+                trail.setData(null);
+                trail.build();
+                plugin.runSync(() ->
+                        new TrailOptionsMenu<>(plugin, this, trail, player).showTo(player));
+            }
         } else {
             plugin.runSync(() -> {
                 // If the player used the back button to get to this page, they may have

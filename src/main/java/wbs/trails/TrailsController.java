@@ -48,6 +48,16 @@ public class TrailsController {
 
 		return false;
 	}
+
+	public int getMaxTrails(Player player) {
+		for (int i = settings.getMaxMultiple() + 1; i > 0; i--) {
+			if (player.hasPermission("wbstrails.multiple." + i)) {
+				return i;
+			}
+		}
+
+		return 1;
+	}
 	
 	/**
 	 * Toggle the players trails.
@@ -103,15 +113,24 @@ public class TrailsController {
 			return false;
 		}
 
-		if (!canHaveMore(player)) {
-			plugin.sendMessage("&wYou cannot have any more trails. Use &h/trails clear&w or &h/trails remove&w to change trails!", player);
+		int maxTrails = getMaxTrails(player);
+
+		if (maxTrails > 1 && getActiveTrails(player).size() >= maxTrails) {
+				plugin.sendMessage("&wYou cannot have any more trails. Use &h/trails clear&w or &h/trails remove&w to change trails!", player);
 			return false;
 		}
 
-		if (!addTrail(player, trail)) {
-			plugin.sendMessage("You cannot add trails while your other trails are disabled.", player);
-			return false;
+		if (maxTrails > 1) {
+			if (!addTrail(player, trail)) {
+				plugin.sendMessage("You cannot add trails while your other trails are disabled.", player);
+				return false;
+			}
+		} else {
+			// Player can only have one trail; treat add as set.
+			clearTrails(player);
+			addTrail(player, trail);
 		}
+
 		trail.enable();
 
 		Collection<Trail<?>> trails = getTrails(player);

@@ -55,6 +55,8 @@ public class CurrentTrailsMenu extends PagedMenu<Trail<?>> implements MenuPage {
             });
         });
 
+        setSlot(rows - 1, 4, TrailMenuUtils.getBuildLink());
+
         setSlot(0, 8, clearSlot);
 
         setSlot(0, 0, TrailMenuUtils.getMainMenuLink());
