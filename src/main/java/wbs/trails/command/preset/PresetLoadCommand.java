@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.trails.TrailsController;
 import wbs.trails.trails.Trail;
+import wbs.trails.trails.presets.PresetGroup;
 import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;
 import wbs.utils.util.commands.WbsSubcommand;
@@ -33,35 +34,25 @@ public class PresetLoadCommand extends WbsSubcommand {
 
         String presetId = args[start];
 
-        PresetTrail<?> preset = PresetManager.getPreset(presetId);
+        PresetGroup group = PresetManager.getPreset(presetId);
 
-        if (preset == null) {
+        if (group == null) {
             sendMessage("Invalid preset: " + presetId + ". Please choose from the following: &h" +
                     PresetManager.getPresets().stream()
                             .filter(check -> sender.hasPermission(check.getPermission()))
-                            .map(PresetTrail::getName)
+                            .map(PresetGroup::getName)
                             .collect(Collectors.joining(", ")), sender);
             return true;
         }
 
-        if (!sender.hasPermission(preset.getPermission())) {
-            sendMessage("You don't have permission to use that trail.", sender);
+        if (!sender.hasPermission(group.getPermission())) {
+            sendMessage("You don't have permission to use that preset.", sender);
             return true;
         }
 
         Player player = (Player) sender;
-        Trail<?> trail = preset.getTrail(player);
-
-        if (!TrailsController.getInstance().canHaveMore(player)) {
-            sendMessage("&wYou cannot have any more trails. Use &h/trails clear&w or &h/trails remove&w to change trails!", player);
-            return true;
-        }
-
-        if (!TrailsController.getInstance().addTrail(player, trail)) {
-            sendMessage("You cannot add trails while your other trails are disabled.", player);
-            return true;
-        }
-        trail.enable();
+        group.apply(player);
+        sendMessage("Preset enabled!", sender);
 
         return true;
     }
@@ -71,7 +62,7 @@ public class PresetLoadCommand extends WbsSubcommand {
         if (args.length == start) {
             return PresetManager.getPresets().stream()
                     .filter(preset -> sender.hasPermission(preset.getPermission()))
-                    .map(PresetTrail::getName)
+                    .map(PresetGroup::getName)
                     .collect(Collectors.toList());
         }
 

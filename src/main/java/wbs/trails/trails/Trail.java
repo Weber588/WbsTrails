@@ -2,12 +2,10 @@ package wbs.trails.trails;
 
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-
 import org.jetbrains.annotations.Nullable;
 import wbs.trails.TrailsSettings;
 import wbs.trails.WbsTrails;
 import wbs.trails.trails.data.DataProducer;
-import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;
 import wbs.utils.util.particles.WbsParticleEffect;
 import wbs.utils.util.plugin.WbsMessenger;
@@ -31,6 +29,7 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 	protected DataProducer<?, ?> data;
 
 	private boolean active = false;
+	private boolean locked = false;
 	
 	Trail(RegisteredTrail<T> registration, Player player) {
 		super(plugin);
@@ -40,7 +39,6 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 
 		settings = plugin.settings;
 	}
-
 	public abstract void tick();
 	
 	public void enable() {
@@ -100,8 +98,8 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 		return registration;
 	}
 
-	public PresetTrail<T> toPreset(String presetName) {
-		return new PresetTrail<>(getThis(), PresetManager.formatId(presetName), presetName);
+	public PresetTrail<T> toPreset() {
+		return new PresetTrail<>(getThis());
 	}
 
 	public Particle getParticle() {
@@ -111,5 +109,13 @@ public abstract class Trail<T extends Trail<T>> extends WbsMessenger {
 	@Nullable
 	public DataProducer<?, ?> getData() {
 		return data;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 }

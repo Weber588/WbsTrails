@@ -174,7 +174,7 @@ public class DustDataProducer extends DataProducer<Particle.DustOptions, DustDat
             lines.add("&6Colour&7: &c" + red + "&7, &a" + green + "&7, &b" + blue + " " + preview);
         }
 
-        lines.add("&6Size&7: " + size);
+        lines.add("&6Size&7: &b" + size);
 
         return lines;
     }

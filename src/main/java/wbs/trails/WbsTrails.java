@@ -53,7 +53,5 @@ public class WbsTrails extends WbsPlugin {
         		sendMessage("Plugin is disabling; your trails have been toggled.", player);
     		}
     	}
-
-    	settings.savePresets();
     }
 }

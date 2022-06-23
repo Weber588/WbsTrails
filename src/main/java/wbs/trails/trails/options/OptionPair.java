@@ -27,8 +27,8 @@ public class OptionPair<T, V> {
         option.apply(applyTo, value);
     }
 
-    public void writeToConfig(ConfigurationSection section) {
-        section.set(option.getName(), value);
+    public void writeToConfig(ConfigurationSection section, String path) {
+        section.set(path + "." + option.getName(), value);
     }
 
     public V getValue() {

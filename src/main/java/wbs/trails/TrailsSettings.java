@@ -13,7 +13,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import wbs.trails.trails.*;
-import wbs.trails.trails.options.ConfigOption;
 import wbs.trails.trails.options.DoubleOption;
 import wbs.trails.trails.presets.PresetManager;
 import wbs.utils.util.WbsEnums;
@@ -370,7 +369,7 @@ public class TrailsSettings extends WbsSettings {
 
 	public void savePresets() {
 		YamlConfiguration presetsConfig = loadConfigSafely(new File(plugin.getDataFolder(), presetsFileName));
-		saveYamlData(presetsConfig, presetsFileName, "preset", PresetManager::savePresets);
+		saveYamlData(presetsConfig, presetsFileName, "preset", PresetManager::writePresets);
 	}
 	
 	private int pvpCooldown = 30;

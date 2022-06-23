@@ -4,8 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import wbs.trails.WbsTrails;
-import wbs.trails.trails.RegisteredTrail;
-import wbs.trails.trails.TrailManager;
 import wbs.utils.exceptions.InvalidConfigurationException;
 
 import java.util.*;
@@ -14,20 +12,22 @@ import java.util.stream.Collectors;
 public final class PresetManager {
     private PresetManager() {}
 
-    private static final Map<String, PresetTrail<?>> presets = new HashMap<>();
+    private static final Map<String, PresetGroup> presets = new HashMap<>();
 
-    public static void setPreset(String id, PresetTrail<?> preset) {
+    public static void setPreset(String id, PresetGroup preset) {
         presets.put(id, preset);
+
+        WbsTrails.getInstance().runAsync(() -> WbsTrails.getInstance().settings.savePresets());
     }
 
     @Nullable
-    public static PresetTrail<?> getPreset(String id) {
+    public static PresetGroup getPreset(String id) {
         return presets.get(id);
     }
 
-    public static ConfigurationSection savePresets(ConfigurationSection section) {
+    public static ConfigurationSection writePresets(ConfigurationSection section) {
         for (String presetId : presets.keySet()) {
-            PresetTrail<?> preset = presets.get(presetId);
+            PresetGroup preset = presets.get(presetId);
 
             ConfigurationSection trailSection = section.createSection(presetId);
 
@@ -38,6 +38,7 @@ public final class PresetManager {
     }
 
     public static void loadPresets(ConfigurationSection section, String directory) {
+        presets.clear();
         for (String presetName : section.getKeys(false)) {
             ConfigurationSection trailSection = section.getConfigurationSection(presetName);
 
@@ -46,25 +47,10 @@ public final class PresetManager {
                 continue;
             }
 
-            String trailType = trailSection.getString("type");
-
-            if (trailType == null) {
-                WbsTrails.getInstance().settings.logError("Missing type in preset.", directory + "/" + presetName + "/type");
-                continue;
-            }
-
-            RegisteredTrail<?> registration = TrailManager.getRegisteredTrail(trailType);
-
-            if (registration == null) {
-                WbsTrails.getInstance().settings.logError("Invalid type: " + trailType, directory + "/" + presetName + "/type");
-                continue;
-            }
-
-            PresetTrail<?> preset;
+            PresetGroup preset;
             try {
-                preset = new PresetTrail<>(registration, trailSection);
+                preset = new PresetGroup(trailSection, directory + "/" + presetName);
             } catch (InvalidConfigurationException e) {
-                WbsTrails.getInstance().settings.logError(e.getMessage(), directory + "/" + presetName);
                 continue;
             }
 
@@ -76,14 +62,14 @@ public final class PresetManager {
         return new LinkedList<>(presets.keySet());
     }
 
-    public static List<PresetTrail<?>> getPresets() {
+    public static List<PresetGroup> getPresets() {
         return new LinkedList<>(presets.values());
     }
 
-    public static Collection<PresetTrail<?>> getAllowed(Player player) {
+    public static Collection<PresetGroup> getAllowed(Player player) {
         return getPresets().stream()
-                .filter(preset -> preset.hasPermission(player))
-                .sorted(Comparator.comparing(PresetTrail::getName))
+                .filter(presetGroup -> presetGroup.hasPermission(player))
+                .sorted(Comparator.comparing(PresetGroup::getName))
                 .collect(Collectors.toList());
     }
 

@@ -22,25 +22,20 @@ public class PresetTrail<T extends Trail<T>> {
     private final List<OptionPair<T, ?>> filledOptions = new LinkedList<>();
 
     @NotNull
-    private final String id;
-
-    private String permission = null;
-    @NotNull
-    private String name;
-
-    private String description;
-
-    @NotNull
     private final Particle particle;
     private DataProducer<?, ?> data;
 
+    private boolean lockByDefault = true;
+    private boolean locked = lockByDefault;
+
     public PresetTrail(@NotNull RegisteredTrail<T> registration, ConfigurationSection section) throws InvalidConfigurationException {
         this.registration = registration;
-        this.id = section.getName();
 
-        permission = section.getString("permission");
-        //noinspection ConstantConditions
-        name = section.getString("name", id);
+        ConfigurationSection defaultConfig = section.getDefaultSection();
+        if (defaultConfig != null) {
+            lockByDefault = defaultConfig.getBoolean("locked", lockByDefault);
+        }
+        locked = section.getBoolean("locked");
 
         String particleName = section.getString("particle");
         if (particleName == null) {
@@ -69,20 +64,12 @@ public class PresetTrail<T extends Trail<T>> {
             }
         }
 
-        description = section.getString("description");
-
         for (ConfigOption<T, ?> option : registration.getOptions()) {
             filledOptions.add(option.fromConfig(section));
         }
     }
 
-    public PresetTrail(T trail, @NotNull String id) {
-        this(trail, id, id);
-    }
-
-    public PresetTrail(T trail, @NotNull String id, @NotNull String name) {
-        this.id = PresetManager.formatId(id);
-        this.name = name;
+    public PresetTrail(T trail) {
         particle = trail.getParticle();
         data = trail.getData();
         registration = trail.getRegistration();
@@ -95,6 +82,8 @@ public class PresetTrail<T extends Trail<T>> {
     public T getTrail(Player player) {
         T trail = registration.buildTrail(player);
 
+        trail.setLocked(locked);
+
         for (OptionPair<T, ?> pair : filledOptions) {
             pair.apply(trail);
         }
@@ -105,56 +94,21 @@ public class PresetTrail<T extends Trail<T>> {
         return trail;
     }
 
-    public void writeToConfig(ConfigurationSection section) {
-        section.set("type", registration.getName());
-        section.set("name", name);
-        section.set("particle", particle.name());
-        section.set("permission", "wbstrails.preset." + id);
-        section.set("description", description);
+    public void writeToConfig(ConfigurationSection section, String path) {
+        section.set(path + ".type", registration.getName());
+        section.set(path + ".particle", particle.name());
+        if (lockByDefault != locked) {
+            section.set(path + ".locked", locked);
+        }
 
         if (data != null) {
-            section.set("data-type", data.getDataClass().getCanonicalName());
-            data.writeToConfig(section, "data");
+            section.set(path + ".data-type", data.getDataClass().getCanonicalName());
+            data.writeToConfig(section, path + ".data");
         }
 
         for (OptionPair<T, ?> pair : filledOptions) {
-            pair.writeToConfig(section);
+            pair.writeToConfig(section, path + ".options");
         }
-    }
-
-    @NotNull
-    public String getPermission() {
-        return permission == null ? "" : permission;
-    }
-
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @NotNull
-    public String getName() {
-        return name;
-    }
-
-    @NotNull
-    public String getId() {
-        return id;
-    }
-
-    public void setName(@NotNull String name) {
-        this.name = name;
-    }
-
-    public boolean hasPermission(Player player) {
-        return player.hasPermission(getPermission()) && player.hasPermission(registration.getPermission());
     }
 
     @NotNull

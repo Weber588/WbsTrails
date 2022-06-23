@@ -1,10 +1,12 @@
 package wbs.trails.command.preset;
 
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import wbs.trails.TrailsController;
 import wbs.trails.trails.Trail;
+import wbs.trails.trails.presets.PresetGroup;
 import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;
 import wbs.utils.util.commands.WbsSubcommand;
@@ -13,6 +15,7 @@ import wbs.utils.util.string.WbsStrings;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PresetSaveCommand extends WbsSubcommand {
     public PresetSaveCommand(@NotNull WbsPlugin plugin) {
@@ -41,18 +44,18 @@ public class PresetSaveCommand extends WbsSubcommand {
             return true;
         }
 
-        if (activeTrails.size() > 1) {
-            sendMessage("You have multiple trails active! Disable " + (activeTrails.size() - 1) + " trails first.", sender);
-            return true;
+        PresetGroup presetGroup = new PresetGroup(activeTrails.stream().map(Trail::toPreset).collect(Collectors.toList()), presetName, presetName);
+
+        Material material = player.getInventory().getItemInMainHand().getType();
+        if (material != Material.AIR) {
+            presetGroup.setMaterial(material);
         }
 
-        Trail<?> trail = activeTrails.get(0);
-        PresetTrail<?> preset = trail.toPreset(presetName);
-        PresetManager.setPreset(preset.getId(), preset);
+        PresetManager.setPreset(presetName, presetGroup);
 
         sendMessage("Preset created! You can load it with &h"
                 + getAlternativeCommand("load", label, args, start) + " "
-                + preset.getId() + "&r.", sender);
+                + presetName + "&r.", sender);
 
         return true;
     }

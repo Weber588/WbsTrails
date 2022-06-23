@@ -11,6 +11,7 @@ import wbs.trails.listeners.ChatStringReader;
 import wbs.trails.menus.build.ChooseParticleMenu;
 import wbs.trails.menus.build.MenuPage;
 import wbs.trails.trails.Trail;
+import wbs.trails.trails.presets.PresetGroup;
 import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;
 import wbs.utils.util.menus.MenuSlot;
@@ -80,7 +81,9 @@ public class CurrentTrailsMenu extends PagedMenu<Trail<?>> implements MenuPage {
         lore.add(0, lineBreak);
 
         lore.add(lineBreak);
-        lore.add("&7Click to edit");
+        if (!trail.isLocked()) {
+            lore.add("&7Click to edit");
+        }
 
         if (player.hasPermission("wbstrails.command.preset.save")) {
             lore.add("&7Shift+Click to create preset");
@@ -123,9 +126,23 @@ public class CurrentTrailsMenu extends PagedMenu<Trail<?>> implements MenuPage {
 
     private void createPreset(Trail<?> trail) {
         boolean registered = ChatStringReader.getStringFromChat(player, newName -> {
-            PresetTrail<?> preset = trail.toPreset(newName);
-            PresetManager.setPreset(preset.getId(), preset);
-            plugin.sendMessage("Preset created! Id: " + preset.getId(), player);
+            PresetTrail<?> preset = trail.toPreset();
+
+            String id = PresetManager.formatId(newName);
+
+            if (PresetManager.getPreset(id) != null) {
+                int i = 2;
+                while (PresetManager.getPreset(id + "_" + i) != null) {
+                    i++;
+                }
+
+                id += "_" + i;
+            }
+
+            PresetGroup group = new PresetGroup(preset, id, newName);
+
+            PresetManager.setPreset(group.getId(), group);
+            plugin.sendMessage("Preset created! Id: " + group.getId(), player);
         }, () -> plugin.sendMessage("&wPreset creation timed out.", player), 600);
 
         if (registered) {
@@ -137,6 +154,11 @@ public class CurrentTrailsMenu extends PagedMenu<Trail<?>> implements MenuPage {
     }
 
     private <T extends Trail<T>> void openTrailEditMenu(Trail<T> trail) {
+        if (trail.isLocked()) {
+            plugin.sendMessage("&wYou cannot edit this trail.", player);
+            return;
+        }
+
         //noinspection unchecked
         plugin.runSync(() ->
                 new ChooseParticleMenu<>(WbsTrails.getInstance(), this, (T) trail, player).showTo(player));
