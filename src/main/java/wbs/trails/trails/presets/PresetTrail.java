@@ -64,8 +64,11 @@ public class PresetTrail<T extends Trail<T>> {
             }
         }
 
-        for (ConfigOption<T, ?> option : registration.getOptions()) {
-            filledOptions.add(option.fromConfig(section));
+        ConfigurationSection optionSection = section.getConfigurationSection("options");
+        if (optionSection != null) {
+            for (ConfigOption<T, ?> option : registration.getOptions()) {
+                filledOptions.add(option.fromConfig(optionSection));
+            }
         }
     }
 

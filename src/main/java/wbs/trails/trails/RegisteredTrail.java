@@ -39,6 +39,7 @@ public class RegisteredTrail<T extends Trail<T>> {
         this.producer = producer;
         material = Material.OAK_SIGN;
 
+        // TODO: Move from reflection to lambda
         try {
             Method registerOption = trailClass.getDeclaredMethod(REGISTER_OPTIONS_METHOD, RegisteredTrail.class);
 

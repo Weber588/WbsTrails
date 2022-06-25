@@ -74,4 +74,8 @@ public final class TrailManager {
                 .sorted(Comparator.comparing(RegisteredTrail::getName))
                 .collect(Collectors.toList());
     }
+
+    public static void unregister(String name) {
+        registeredTrails.remove(name);
+    }
 }

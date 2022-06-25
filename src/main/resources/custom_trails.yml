@@ -52,36 +52,189 @@ horns:
     y: 0
     z: 0
 
-  # Simple movement of the trail can be affected by options defined here.
-  # (Not used by Horns trail; you can leave out options to disable them, or set
-  # them to be constant values by setting max and min equal to each other. Constant
-  # values cannot be modified in game.)
+
   options:
+    # The name of your option. These do nothing alone - you must use them in the providers section.
+    speed:
+      default: 0
+      min: 0
+      max: 5
+      multiplier: 100 # You can scale the value here to keep values user-friendly.
+      invert: true # When true, the number provided by this will be multiplier/x, where x is the value the player chooses.
+
+    bounce_speed:
+      default: 0
+      min: 0
+      max: 2
+      invert: true
+      multiplier: 100 # You can scale the value here to keep values user-friendly.
+
+    bounce_height:
+      default: 0
+      min: 0
+      max: 2
+      # When omitted, multiplier is 1, and invert is false
+
+  # This section lists providers that affect certain aspects of a custom trail.
+  # Learn about providers here: https://github.com/Weber588/WbsUtils/wiki/Providers
+  # You can also make these configurable with a custom generator, "trail-option", which you can
+  # see above.
+  # All providers are refreshed 20 times per second, regardless of refresh rate.
+  providers:
     # Rotate about the local Y axis. If track (above) is set to 'absolute' or 'body', it'll
     # rotate about the world's Y axis. If set to 'head', then rotation will occur around the
     # player's head
-    rotate:
-      # You can set a user-friendly name here that players will see in game.
-      # If omitted, the name of the option will be used (in this case, "rotate")
-      name: 'speed'
-      default: 0
-      min: 0 # Since min equals max, this option won't appear in game.
-      max: 0
+    rotation: 0
 
-    # Move the points up and down over time (where up is relative to the 'track' value)
-    bounce:
-      # How far up & down should the points move?
-      height:
-        name: 'bounce_height'
-        default: 0
-        min: 0
-        max: 0
-      # How fast should the points move?
-      # (in bounces per second - if speed is 2, then points will move up and down twice per
-      # second. If speed is 0.2, the points will move up and down once every 5 seconds)
-      speed:
-        # Names must be unique across all options for this trail to be usable by command.
-        name: 'bounce_speed'
-        default: 0
-        min: 0
-        max: 0
+    # Below is an example of a trail option that makes use of an option above.
+    #  rotation:
+    #    cycle:
+    #      start: 0
+    #      end: 360
+    #      period:
+    #        trail-option:
+    #          name: 'speed' # Provide the name of the option defined above to use that configured value!
+
+    # How much to move all points in a given axis
+    offset:
+      # This is a vector provider - you can specify x, y, and z number providers, or a vector generator:
+      # https://github.com/Weber588/WbsUtils/wiki/Provider-Generators#Vector-Generators
+      x: 0
+      y: 0
+      # Here's an example of a provider making the custom trail bounce up and down over a configurable time and height
+      #  y:
+      #    pulse:
+      #      min:
+      #       mul:
+      #         a: -1
+      #         b:
+      #           trail-option:
+      #             name: 'bounce_height'
+      #      max:
+      #        trail-option:
+      #          name: 'bounce_height'
+      #      period:
+      #        trail-option:
+      #          name: 'bounce_speed'
+      z: 0
+
+wings:
+  description: 'Angel wings!'
+
+  # The item that appears in menus to represent this trail
+  material: elytra
+
+  # body:
+  #   Move the points relative to the player's body, rotating about the Y axis
+  #   when they look left or right, but not when they look up or down.
+  #   Centers on the middle of the player (including sneak height change)
+  track: body
+
+  # The list of points at which to generate particles
+  points:
+    - '0.473, 1.08, 0.0'
+    - '0.36, 0.945, 0.0'
+    - '0.698, 1.35, 0.0'
+    - '0.54, 0.675, 0.0'
+    - '0.405, 0.675, 0.0'
+    - '0.383, 0.81, 0.0'
+    - '0.563, 1.35, 0.0'
+    - '0.45, 1.215, 0.0'
+    - '0.315, 1.215, 0.0'
+    - '0.765, 0.945, 0.0'
+    - '0.742, 0.27, 0.0'
+    - '0.293, 0.54, 0.0'
+    - '0.607, 1.08, 0.0'
+    - '0.63, 0.135, 0.0'
+    - '0.563, 0.54, 0.0'
+    - '0.72, 1.215, 0.0'
+    - '0.9, 0.135, 0.0'
+    - '0.495, 0.945, 0.0'
+    - '0.698, 0.54, 0.0'
+    - '0.63, 0.945, 0.0'
+    - '0.473, 0.27, 0.0'
+    - '0.653, 0.81, 0.0'
+    - '0.135, 0.675, 0.0'
+    - '0.112, 0.81, 0.0'
+    - '0.518, 0.81, 0.0'
+    - '0.428, 0.54, 0.0'
+    - '0.675, 0.675, 0.0'
+    - '0.337, 1.08, 0.0'
+    - '0.742, 1.08, 0.0'
+    - '0.585, 1.215, 0.0'
+    - '0.585, 0.405, 0.0'
+    - '0.225, 0.945, 0.0'
+    - '0.607, 0.27, 0.0'
+    - '0.202, 1.08, 0.0'
+    - '0.428, 1.35, 0.0'
+    - '0.27, 0.675, 0.0'
+    - '0.315, 0.405, 0.0'
+    - '0.72, 0.405, 0.0'
+    - '0.765, 0.135, 0.0'
+    - '0.248, 0.81, 0.0'
+    - '0.45, 0.405, 0.0'
+
+  flip:
+    x: false
+    y: true
+    z: false
+
+  offset:
+    x: 0
+    y: 1.2
+    z: -0.2
+
+  rotate:
+    x: 0
+    y: 30
+    z: 0
+
+  mirror:
+    x: true
+    y: false
+    z: false
+
+  # List options which may be accessed by providers in the providers section.
+  options:
+    # The name of your option. These do nothing alone - you must use them in the providers section.
+    speed:
+      default: 1
+      min: 0
+      max: 2
+      multiplier: 100 # You can scale the value here to keep values user-friendly.
+      invert: true # When true, the number provided by this will be multiplier/x, where x is the value the player chooses.
+
+    bounce_height:
+      default: 0.06
+      min: 0
+      max: 0.2
+
+  # This section lists providers that affect certain aspects of a custom trail.
+  # Learn about providers here: https://github.com/Weber588/WbsUtils/wiki/Providers
+  # You can also make these configurable with a custom generator, "trail-option", which you can
+  # see above.
+  # All providers are refreshed 20 times per second, regardless of refresh rate.
+  providers:
+    # Rotate about the local Y axis. If track (above) is set to 'absolute' or 'body', it'll
+    # rotate about the world's Y axis. If set to 'head', then rotation will occur around the
+    # player's head
+    rotation: 0
+
+    # How much to move all points in a given axis
+    offset:
+      x: 0
+      y:
+        pulse:
+          min:
+            mul:
+              a: -1
+              b:
+                trail-option:
+                  name: 'bounce_height'
+          max:
+            trail-option:
+              name: 'bounce_height'
+          period:
+            trail-option:
+              name: 'speed'
+      z: 0

@@ -10,6 +10,7 @@ import wbs.trails.trails.presets.PresetManager;
 import wbs.trails.trails.presets.PresetTrail;
 import wbs.utils.util.commands.WbsSubcommand;
 import wbs.utils.util.plugin.WbsPlugin;
+import wbs.utils.util.string.WbsStrings;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class PresetLoadCommand extends WbsSubcommand {
             return true;
         }
 
-        String presetId = args[start];
+        String presetId = WbsStrings.combineLast(args, start);
 
         PresetGroup group = PresetManager.getPreset(presetId);
 

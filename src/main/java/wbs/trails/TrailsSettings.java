@@ -15,10 +15,13 @@ import org.bukkit.util.Vector;
 import wbs.trails.trails.*;
 import wbs.trails.trails.options.DoubleOption;
 import wbs.trails.trails.presets.PresetManager;
+import wbs.utils.exceptions.InvalidConfigurationException;
 import wbs.utils.util.WbsEnums;
 import wbs.utils.util.WbsMath;
 import wbs.utils.util.plugin.WbsPlugin;
 import wbs.utils.util.plugin.WbsSettings;
+import wbs.utils.util.providers.NumProvider;
+import wbs.utils.util.providers.VectorProvider;
 
 public class TrailsSettings extends WbsSettings {
 
@@ -259,68 +262,87 @@ public class TrailsSettings extends WbsSettings {
 
 			registration.setPoints(points);
 
-			// TODO: Abstract this
-			ConfigurationSection optionSection = section.getConfigurationSection("options");
-			if (optionSection != null) {
-				ConfigurationSection speedSection = optionSection.getConfigurationSection("rotate");
-				if (speedSection != null) {
-					//noinspection ConstantConditions
-					String name = speedSection.getString("name", "rotate").replace("\\s", "_");
+			ConfigurationSection optionsSection = section.getConfigurationSection("options");
+			if (optionsSection != null) {
+				for (String key : optionsSection.getKeys(false)) {
+					String optionDir = directory + "/options/" + key;
 
-					DoubleOption<CustomTrail> speedOption = new DoubleOption<>(name, 0, 0, 0,
-							CustomTrail::setRotationSpeed, CustomTrail::getRotationSpeed);
+					ConfigurationSection optionSection = optionsSection.getConfigurationSection(key);
 
-					speedOption.configure(speedSection);
-
-					double min = speedOption.getMin();
-					double max = speedOption.getMax();
-					double defaultSpeed = speedOption.getDefaultValue();
-
-					if (min != max || defaultSpeed != 0) {
-						registration.registerOption(speedOption);
+					if (optionSection == null) {
+						logError("Option must be a section.", optionDir);
+						continue;
 					}
-				}
 
-				ConfigurationSection bounceSection = optionSection.getConfigurationSection("bounce");
-				if (bounceSection != null) {
+					String name = optionSection.getString("name", optionSection.getName());
 
-					ConfigurationSection bounceHeightSection = bounceSection.getConfigurationSection("height");
-					if (bounceHeightSection != null) {
-						//noinspection ConstantConditions
-						String name = bounceHeightSection.getString("name", "height").replace("\\s", "_");
+					if (!optionSection.isDouble("default") && !optionSection.isInt("default")) {
+						logError("Default is a required field.", optionDir + "/default");
+						continue;
+					}
 
-						DoubleOption<CustomTrail> bounceHeightOption = new DoubleOption<>(name, 0, 0, 0,
-								CustomTrail::setBounceHeight, CustomTrail::getBounceHeight);
+					double defaultValue = optionSection.getDouble("default");
 
-						bounceHeightOption.configure(bounceHeightSection);
+					if (!optionSection.isDouble("min") && !optionSection.isInt("min")) {
+						logError("Min is a required field.", optionDir + "/min");
+						continue;
+					}
 
-						double minHeight = bounceHeightOption.getMin();
-						double maxHeight = bounceHeightOption.getMax();
-						double defaultHeight = bounceHeightOption.getDefaultValue();
+					double min = optionSection.getDouble("min");
 
-						if (minHeight != maxHeight || minHeight != defaultHeight || defaultHeight != 0) {
-							registration.registerOption(bounceHeightOption);
+					if (!optionSection.isDouble("max") && !optionSection.isInt("max")) {
+						logError("Max is a required field.", optionDir + "/max");
+						continue;
+					}
 
-							ConfigurationSection bounceSpeedSection = bounceSection.getConfigurationSection("speed");
-							if (bounceSpeedSection != null) {
-								//noinspection ConstantConditions
-								String speedName = bounceSpeedSection.getString("name", "rotate").replace("\\s", "_");
+					double max = optionSection.getDouble("max");
 
-								DoubleOption<CustomTrail> speedOption = new DoubleOption<>(speedName, 0, 0, 0,
-										CustomTrail::setBounceSpeed, CustomTrail::getBounceSpeed);
+					double multiplier = optionSection.getDouble("multiplier", 1);
+					boolean invert = optionSection.getBoolean("invert", false);
 
-								speedOption.configure(bounceSpeedSection);
-
-								double min = speedOption.getMin();
-								double max = speedOption.getMax();
-								double defaultSpeed = speedOption.getDefaultValue();
-
-								if (min != max || defaultSpeed != 0) {
-									registration.registerOption(speedOption);
+					DoubleOption<CustomTrail> option = new DoubleOption<>(name,
+							defaultValue,
+							min,
+							max,
+							(trail, val) -> {
+								if (invert) {
+									trail.setProviderVal(name, multiplier / val);
+								} else {
+									trail.setProviderVal(name, multiplier * val);
 								}
-							}
-						}
+							},
+							trail -> {
+								double val = trail.getProviderVal(name);
+								if (invert) {
+									return multiplier / val;
+								} else {
+									return val / multiplier;
+								}
+							});
+
+					registration.registerOption(option);
+				}
+			}
+
+			TrailManager.registerCustomTrail(registration);
+
+			ConfigurationSection providerSection = section.getConfigurationSection("providers");
+			if (providerSection != null) {
+				try {
+					if (providerSection.contains("rotation")) {
+						NumProvider rotation = new NumProvider(providerSection, "rotation", this, directory + "/providers");
+
+						registration.setRotation(rotation);
 					}
+					ConfigurationSection offsetSection = providerSection.getConfigurationSection("offset");
+					if (offsetSection != null) {
+						VectorProvider offset = new VectorProvider(offsetSection, this, directory + "/providers/offset");
+
+						registration.setOffset(offset);
+					}
+				} catch (InvalidConfigurationException ignored) {
+					TrailManager.unregister(registration.getName());
+					continue;
 				}
 			}
 
@@ -336,7 +358,6 @@ public class TrailsSettings extends WbsSettings {
 				}
 			}
 
-			TrailManager.registerCustomTrail(registration);
 			customTrailsLoaded++;
 		}
 

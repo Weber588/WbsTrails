@@ -1,21 +1,25 @@
 package wbs.trails.trails;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
-import wbs.utils.util.VersionUtil;
+import wbs.trails.trails.options.TrailOptionProvider;
 import wbs.utils.util.WbsMath;
 import wbs.utils.util.entities.WbsEntityUtil;
 import wbs.utils.util.entities.WbsPlayerUtil;
 import wbs.utils.util.particles.CustomParticleEffect;
 import wbs.utils.util.particles.WbsParticleEffect;
+import wbs.utils.util.providers.NumProvider;
+import wbs.utils.util.providers.VectorProvider;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CustomTrail extends Trail<CustomTrail> {
@@ -24,9 +28,11 @@ public class CustomTrail extends Trail<CustomTrail> {
     private String description;
     private TrackingType trackingType = TrackingType.ABSOLUTE;
 
-    private double rotationSpeed = 0;
-    private double bounceSpeed = 0;
-    private double bounceHeight = 0;
+    private final Multimap<String, TrailOptionProvider> registeredProviders = HashMultimap.create();
+    private final Map<String, Double> currentValues = new HashMap<>();
+
+    private NumProvider rotation;
+    private VectorProvider offset;
 
     public CustomTrail(RegisteredTrail<CustomTrail> registration, Player player) {
         super(registration, player);
@@ -74,14 +80,22 @@ public class CustomTrail extends Trail<CustomTrail> {
 
     private final static Vector upVector = new Vector(0, 1, 0);
 
-    private double age = 0;
-
     @Override
     public void tick() {
+        for (int i = 0; i < settings.getRefreshRate(); i++) {
+            rotation.refresh();
+            offset.refresh();
+        }
+
         List<Vector> newPoints;
 
         Vector localUp = upVector;
         Location playLocation = player.getLocation();
+
+        Vector offset = null;
+        if (this.offset != null) {
+            offset = this.offset.val();
+        }
 
         switch (trackingType) {
             case ABSOLUTE:
@@ -94,6 +108,12 @@ public class CustomTrail extends Trail<CustomTrail> {
                 newPoints = WbsMath.rotateVectors(points,
                         upVector,
                         0 - player.getLocation().getYaw());
+
+                if (offset != null) {
+                    offset = WbsMath.rotateVector(offset,
+                            upVector,
+                            0 - player.getLocation().getYaw());
+                }
                 break;
             case HEAD:
                 localUp = WbsEntityUtil.getLocalUp(player);
@@ -106,6 +126,16 @@ public class CustomTrail extends Trail<CustomTrail> {
                 newPoints = WbsMath.rotateVectors(newPoints,
                         localUp,
                         0 - player.getLocation().getYaw());
+
+                if (offset != null) {
+                    offset = WbsMath.rotateFrom(offset,
+                            localUp,
+                            upVector);
+
+                    offset = WbsMath.rotateVector(offset,
+                            localUp,
+                            0 - player.getLocation().getYaw());
+                }
                 break;
             default:
                 settings.logError("Tracking type not recognized: " + trackingType + ". Please report this error.",
@@ -115,20 +145,15 @@ public class CustomTrail extends Trail<CustomTrail> {
                 return;
         }
 
-        age += settings.getRefreshRate();
-
-        if (rotationSpeed != 0) {
-            double rotation = age * rotationSpeed;
+        if (rotation != null) {
+            double rotation = this.rotation.val();
 
             newPoints = WbsMath.rotateVectors(newPoints, localUp, rotation);
         }
 
-        if (bounceHeight != 0 && bounceSpeed != 0) {
-            double height = Math.sin(age * bounceSpeed) * bounceHeight;
-            Vector offset = localUp.clone().normalize().multiply(height);
-            newPoints = newPoints.stream()
-                    .map(point -> point.add(offset))
-                    .collect(Collectors.toList());
+        if (offset != null) {
+            Vector finalOffset = offset;
+            newPoints.forEach(point -> point.add(finalOffset));
         }
 
         effect.setPoints(newPoints);
@@ -160,32 +185,31 @@ public class CustomTrail extends Trail<CustomTrail> {
         this.description = description;
     }
 
-    public double getRotationSpeed() {
-        return rotationSpeed;
-    }
-
-    public void setRotationSpeed(double rotationSpeed) {
-        this.rotationSpeed = rotationSpeed;
-    }
-
-    public void setTrackingType(@NotNull TrackingType trackingType) {
+    public void setTrackingType(TrackingType trackingType) {
         this.trackingType = trackingType;
     }
 
-    public double getBounceSpeed() {
-        return bounceSpeed;
+    public void setRotation(NumProvider rotation) {
+        this.rotation = rotation;
     }
 
-    public void setBounceSpeed(double bounceSpeed) {
-        this.bounceSpeed = bounceSpeed;
+    public void setOffset(VectorProvider offset) {
+        this.offset = offset;
     }
 
-    public double getBounceHeight() {
-        return bounceHeight;
+    public void registerProvider(TrailOptionProvider provider) {
+        registeredProviders.put(provider.getName(), provider);
     }
 
-    public void setBounceHeight(double bounceHeight) {
-        this.bounceHeight = bounceHeight;
+    public void setProviderVal(String name, double val) {
+        currentValues.put(name, val);
+        for (TrailOptionProvider provider : registeredProviders.get(name)) {
+            provider.setValue(val);
+        }
+    }
+
+    public double getProviderVal(String name) {
+        return currentValues.get(name);
     }
 
     public enum TrackingType {

@@ -7,7 +7,9 @@ import wbs.trails.listeners.ChatStringReader;
 import wbs.trails.listeners.CombatListener;
 import wbs.trails.trails.Trail;
 import wbs.trails.trails.TrailManager;
+import wbs.trails.trails.options.TrailOptionProvider;
 import wbs.utils.util.plugin.WbsPlugin;
+import wbs.utils.util.providers.generator.GeneratorManager;
 
 public class WbsTrails extends WbsPlugin {
 	
@@ -20,6 +22,8 @@ public class WbsTrails extends WbsPlugin {
 	
 	@Override
 	public void onEnable() {
+		GeneratorManager.register("trail-option", TrailOptionProvider::new);
+
 		instance = this;
 		if (!getDataFolder().exists()) {
 			if (!getDataFolder().mkdir()) {
@@ -41,7 +45,6 @@ public class WbsTrails extends WbsPlugin {
 
 		registerListener(new CombatListener(this));
 	    registerListener(new ChatStringReader());
-
 	}
 
     @Override
