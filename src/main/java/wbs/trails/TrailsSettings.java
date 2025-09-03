@@ -71,7 +71,7 @@ public class TrailsSettings extends WbsSettings {
 		List<String> blacklistParticleNames = config.getStringList("particle-blacklist");
 
 		if (blacklistParticleNames.isEmpty()) {
-			plugin.logger.warning("The particle-blacklist section was missing.");
+			plugin.getLogger().warning("The particle-blacklist section was missing.");
 		} else {
 			for (String asString : blacklistParticleNames) {
 				Particle particle = WbsEnums.getEnumFromString(Particle.class, asString);
@@ -82,10 +82,6 @@ public class TrailsSettings extends WbsSettings {
 					logError("Invalid or outdated/future particle. (" + asString + ")", directory + "particle-blacklist");
 				}
 			}
-		}
-
-		for (Particle blacklistParticle : forceBlacklistedParticles) {
-			allowedParticles.remove(blacklistParticle);
 		}
 
 		ConfigurationSection particleSetConfigs = config.getConfigurationSection("particle-sets");
@@ -374,11 +370,11 @@ public class TrailsSettings extends WbsSettings {
 		if (!file.exists()) {
 			try {
 				if (!file.createNewFile()) {
-					plugin.logger.info(presetsFileName + " failed to create.");
+					plugin.getLogger().info(presetsFileName + " failed to create.");
 					return;
 				}
 			} catch (IOException e) {
-				plugin.logger.info(presetsFileName + " failed to create.");
+				plugin.getLogger().info(presetsFileName + " failed to create.");
 				e.printStackTrace();
 				return;
 			}
@@ -412,13 +408,6 @@ public class TrailsSettings extends WbsSettings {
 	public boolean toggleOnAllDamage() {
 		return toggleOnAllDamage;
 	}
-	
-	private final List<Particle> forceBlacklistedParticles = Arrays.asList(
-			Particle.LEGACY_BLOCK_CRACK,
-			Particle.LEGACY_BLOCK_DUST,
-			Particle.LEGACY_FALLING_DUST,
-			Particle.MOB_APPEARANCE
-			);
 
 	private final List<Particle> particleBlacklist = new LinkedList<>();
 	
@@ -455,9 +444,7 @@ public class TrailsSettings extends WbsSettings {
 	}
 
 	public Set<Particle> getParticleBlacklist() {
-		Set<Particle> returnSet = new HashSet<>(particleBlacklist);
-		returnSet.addAll(forceBlacklistedParticles);
-		return returnSet;
+        return new HashSet<>(particleBlacklist);
 	}
 
 	private int refreshRate = 5;

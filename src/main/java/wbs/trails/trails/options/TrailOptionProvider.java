@@ -1,11 +1,11 @@
 package wbs.trails.trails.options;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.configuration.ConfigurationSection;
 import wbs.trails.WbsTrails;
 import wbs.trails.trails.CustomRegisteredTrail;
 import wbs.trails.trails.RegisteredTrail;
 import wbs.trails.trails.TrailManager;
+import wbs.utils.exceptions.CommandNotImplementedException;
 import wbs.utils.exceptions.InvalidConfigurationException;
 import wbs.utils.util.plugin.WbsSettings;
 import wbs.utils.util.providers.generator.num.DoubleGenerator;
@@ -78,7 +78,7 @@ public class TrailOptionProvider extends DoubleGenerator {
     @Override
     public void writeToConfig(ConfigurationSection configurationSection, String s) {
         // TODO
-        throw new NotImplementedException();
+        throw new CommandNotImplementedException();
     }
 
     @Override

@@ -205,7 +205,7 @@ public class ImageCommand extends WbsSubcommand {
                     for (Vector pos : rotated.keySet()) {
                         Particle.DustOptions data = new Particle.DustOptions(rotated.get(pos), (float) particleSize);
 
-                        world.spawnParticle(Particle.REDSTONE, center.clone().add(pos), 0, data);
+                        world.spawnParticle(Particle.DUST, center.clone().add(pos), 0, data);
                     }
                 }
             }.runTaskTimer(plugin, 5, 5);
